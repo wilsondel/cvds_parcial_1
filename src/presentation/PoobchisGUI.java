@@ -16,6 +16,7 @@ public class PoobchisGUI extends JFrame {
 
     // POObchis
     Poobchis poobchis;
+    int optPlayers;
 
     // Menu
     private JMenuBar navbar;
@@ -25,7 +26,18 @@ public class PoobchisGUI extends JFrame {
     private JPanel home,boardBackground,settings;
 
     // Home Buttons
-    private JButton buttonStart,buttonSettings, buttonExit;
+    private JButton buttonStart,buttonRules, buttonExit;
+
+    // Choose modes
+    private JPanel chooseModes;
+    // Buttons
+    private JButton buttonMode1,buttonMode2;
+
+    // // Mode 1
+    private JPanel mode1;
+    private JButton powerP1,colorP1,diceStyleP1, playMode1;
+    //// player amount
+    private JDialog playerAmount;
 
     // Board
 
@@ -33,6 +45,8 @@ public class PoobchisGUI extends JFrame {
     private JButton dice1, dice2, powerful;
     // labels
     private JLabel playerTurn, power;
+
+
 
     /*Panel buttonAdd*/
     private JTextField textCode;
@@ -67,6 +81,12 @@ public class PoobchisGUI extends JFrame {
 
         // Board
         prepareElementsBoard();
+
+        // Modes
+        prepareElementsChooseModes();
+
+        //Settings Mode 1
+        prepareElementsSettingsMode1();
 
         // Home
         prepareElementsHome();
@@ -168,16 +188,80 @@ public class PoobchisGUI extends JFrame {
         JPanel homeButtons = new JPanel();
         homeButtons.setLayout(new GridLayout(5,1, 1, 20));
         buttonStart = new JButton("Start");
-        buttonStart.setBackground(Color.decode("#c9edea"));
+        buttonStart.setBackground(Color.decode("#a4553f"));
         homeButtons.add(buttonStart);
-//        buttonSettings = new JButton("Settings");
-//        buttonSettings.setBackground(Color.decode("#c9edea"));
-//        homeButtons.add(buttonSettings);
+        buttonRules = new JButton("Rules");
+        buttonRules.setBackground(Color.decode("#c69275"));
+        homeButtons.add(buttonRules);
         buttonExit = new JButton("Exit");
-        buttonExit.setBackground(Color.decode("#c9edea"));
+        buttonExit.setBackground(Color.decode("#ffebdb"));
         homeButtons.add(buttonExit);
         home.add(homeButtons, BorderLayout.CENTER);
     }
+
+    private void prepareElementsChooseModes() {
+        chooseModes = new JPanel();
+        chooseModes.setLayout(new BorderLayout(Toolkit.getDefaultToolkit().getScreenSize().width/9, 5));
+        add(chooseModes);
+
+        ImageIcon img = new javax.swing.ImageIcon("logo.png");
+        JLabel image = new javax.swing.JLabel(img);
+        chooseModes.add(image, BorderLayout.NORTH);
+        JPanel homeEast = new JPanel();
+        chooseModes.add(homeEast, BorderLayout.EAST);
+        JPanel homeWest = new JPanel();
+        chooseModes.add(homeWest, BorderLayout.WEST);
+        JPanel homeSouth = new JPanel();
+        chooseModes.add(homeSouth, BorderLayout.SOUTH);
+
+        JPanel homeButtons = new JPanel();
+        homeButtons.setLayout(new GridLayout(5,1, 1, 20));
+        buttonMode1 = new JButton("Mode 1");
+        buttonMode1.setBackground(Color.decode("#a4553f"));
+//        JDialog d = new JDialog(this , "Dialog Example", true);
+//        buttonMode1.add(d); // TODO: llorar
+        homeButtons.add(buttonMode1);
+        buttonMode2 = new JButton("Mode 2");
+        buttonMode2.setBackground(Color.decode("#c69275"));
+        homeButtons.add(buttonMode2);
+        chooseModes.add(homeButtons, BorderLayout.CENTER);
+    }
+
+
+    private void prepareElementsSettingsMode1() {
+        mode1 = new JPanel();
+        mode1.setLayout(new BorderLayout(Toolkit.getDefaultToolkit().getScreenSize().width/9, 5));
+        add(mode1);
+
+        JPanel homeNorth = new JPanel();
+        JLabel titleMode = new JLabel("Mode 1 | \n\t Choose for player 1:");
+        homeNorth.add(titleMode);
+        mode1.add(homeNorth, BorderLayout.NORTH);
+        JPanel homeEast = new JPanel();
+        mode1.add(homeEast, BorderLayout.EAST);
+        JPanel homeWest = new JPanel();
+        mode1.add(homeWest, BorderLayout.WEST);
+        JPanel homeSouth = new JPanel();
+        mode1.add(homeSouth, BorderLayout.SOUTH);
+
+        JPanel homeButtons = new JPanel();
+        homeButtons.setLayout(new GridLayout(5,1, 1, 20));
+        powerP1 = new JButton("Power");
+        powerP1.setBackground(Color.decode("#a4553f"));
+        homeButtons.add(powerP1);
+        colorP1 = new JButton("Color");
+        colorP1.setBackground(Color.decode("#c69275"));
+        homeButtons.add(colorP1);
+        diceStyleP1 = new JButton("Dice Style");
+        diceStyleP1.setBackground(Color.decode("#ddbc9b"));
+        homeButtons.add(diceStyleP1);
+        playMode1 = new JButton("Play");
+        playMode1.setBackground(Color.decode("#ffebdb"));
+        homeButtons.add(playMode1);
+
+        mode1.add(homeButtons, BorderLayout.CENTER);
+    }
+
 
     private void prepareActions() {
         // Finish program when JFrame is closed
@@ -198,6 +282,10 @@ public class PoobchisGUI extends JFrame {
 
         // Board Houses
         //prepareActionsButtonsHouses();
+
+        // Modes
+        prepareActionsButtonsChooseModes();
+
 
     }
     private void prepareActionsMenu() {
@@ -235,15 +323,16 @@ public class PoobchisGUI extends JFrame {
     private void prepareActionsButtons() {
         buttonStart.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                goToBoard();
+                goToChooseModes();
+//                goToBoard();
             }
         });
 
-//        buttonSettings.addActionListener( new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-////                cghaneSettings();
-//            }
-//        });
+        buttonRules.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+//                cghaneSettings();
+            }
+        });
 
         buttonExit.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -253,6 +342,31 @@ public class PoobchisGUI extends JFrame {
 
 
     }
+
+    private void prepareActionsButtonsChooseModes() {
+        buttonMode1.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Object[] possibilities = {"2", "3","4"};
+                String s = (String)JOptionPane.showInputDialog(
+                        null,
+                        "Choose the amount of players: ",
+                        "Customized Dialog",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        possibilities,
+                        "4");
+                optPlayers = Integer.parseInt(s);
+                goToSettingsMode1();
+            }
+        });
+
+        buttonMode2.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+//                cghaneSettings();
+            }
+        });
+    }
+
 
     private void actionSave() {
         JFileChooser fileChooser = new JFileChooser();
@@ -275,12 +389,18 @@ public class PoobchisGUI extends JFrame {
     }
 
 
-    private void goToBoard() {
+    private void goToChooseModes() {
         home.setVisible(false);
-        prepareElementsBoard();
+        prepareElementsChooseModes();
         prepareActions();
-//        prepareActionsButtons();
-//        prepareActionsButtonsHouses();
+        chooseModes.setVisible(true);
+    }
+
+
+    private void goToSettingsMode1() {
+        chooseModes.setVisible(false);
+        prepareElementsSettingsMode1();
+        prepareActions();
         boardBackground.setVisible(true);
     }
 
