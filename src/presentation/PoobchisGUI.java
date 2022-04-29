@@ -12,11 +12,11 @@ import javax.swing.*;
 
 public class PoobchisGUI extends JFrame {
 
-    private static final Dimension PREFERRED_DIMENSION = new Dimension(900,900);
+    private static final Dimension PREFERRED_DIMENSION = new Dimension(950,980);
 
     // POObchis
     Poobchis poobchis;
-    int optPlayers;
+    int optPlayers=2;
 
     // Menu
     private JMenuBar navbar;
@@ -157,7 +157,7 @@ public class PoobchisGUI extends JFrame {
         JPanel boardImg = new JPanel();
 //        homeButtons.setLayout(new GridLayout(5,5));
         // Board
-        ImageIcon img = new javax.swing.ImageIcon("template2.png");
+        ImageIcon img = new javax.swing.ImageIcon("template3.png");
         JLabel image = new javax.swing.JLabel(img);
         // Piece
         JPanel boardImg2 = new JPanel();
@@ -216,12 +216,12 @@ public class PoobchisGUI extends JFrame {
 
         JPanel homeButtons = new JPanel();
         homeButtons.setLayout(new GridLayout(5,1, 1, 20));
-        buttonMode1 = new JButton("Mode 1");
+        buttonMode1 = new JButton("Fun Mode");
         buttonMode1.setBackground(Color.decode("#a4553f"));
 //        JDialog d = new JDialog(this , "Dialog Example", true);
 //        buttonMode1.add(d); // TODO: llorar
         homeButtons.add(buttonMode1);
-        buttonMode2 = new JButton("Mode 2");
+        buttonMode2 = new JButton("PvM Mode");
         buttonMode2.setBackground(Color.decode("#c69275"));
         homeButtons.add(buttonMode2);
         chooseModes.add(homeButtons, BorderLayout.CENTER);
@@ -286,6 +286,9 @@ public class PoobchisGUI extends JFrame {
         // Modes
         prepareActionsButtonsChooseModes();
 
+        // Mode 1 buttons
+        prepareActionsSettingsMode1();
+
 
     }
     private void prepareActionsMenu() {
@@ -346,16 +349,6 @@ public class PoobchisGUI extends JFrame {
     private void prepareActionsButtonsChooseModes() {
         buttonMode1.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Object[] possibilities = {"2", "3","4"};
-                String s = (String)JOptionPane.showInputDialog(
-                        null,
-                        "Choose the amount of players: ",
-                        "Customized Dialog",
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        possibilities,
-                        "4");
-                optPlayers = Integer.parseInt(s);
                 goToSettingsMode1();
             }
         });
@@ -365,6 +358,103 @@ public class PoobchisGUI extends JFrame {
 //                cghaneSettings();
             }
         });
+    }
+
+    private void prepareActionsSettingsMode1() {
+
+        powerP1.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JDialog d = new JDialog();
+                d.setLayout( new GridLayout(10,1,0,0) );
+                String[] dicesStyles = {"0","1","2"};
+                d.add( new JLabel ("Choose a power"));
+                JButton b=new JButton("Ok");
+                b.setBounds(200,100,75,20);
+                for (int i = 0; i < optPlayers; i++) {
+                    d.add( new JLabel ("Advantageous"));
+                    JComboBox cbAdvantage=new JComboBox(dicesStyles);
+                    cbAdvantage.setBounds(50, 50,90,20);
+                    d.add(new JLabel("Player " + (i+1) ));
+                    d.add(cbAdvantage);
+                    b.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            String data = ""+ cbAdvantage.getItemAt(cbAdvantage.getSelectedIndex());
+                            System.out.println(data);
+                            d.setVisible(false);
+                        }
+                    });
+                }
+                d.add(b);
+                d.setSize(400,400);
+                d.setVisible(true);
+            }
+        });
+
+
+        colorP1.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JDialog d = new JDialog();
+                d.setLayout( new GridLayout(10,1,0,0) );
+                String[] colors = new String[optPlayers];
+                String[] colorParchis = {"red","yellow","blue","green"};
+                for (int i = 0; i < optPlayers; i++) {
+                    colors[i] = colorParchis[i];
+                }
+                d.add( new JLabel ("Choose colors"));
+                JButton b=new JButton("Ok");
+                b.setBounds(200,100,75,20);
+                for (int i = 0; i < optPlayers; i++) {
+                    JComboBox cb=new JComboBox(colors);
+                    cb.setBounds(50, 50,90,20);
+                    d.add(new JLabel("Player " + (i+1) ));
+                    d.add(cb);
+                    b.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            String data = ""+ cb.getItemAt(cb.getSelectedIndex());
+                            System.out.println(data);
+                            d.setVisible(false);
+                        }
+                    });
+                }
+                d.add(b);
+                d.setSize(400,400);
+                d.setVisible(true);
+            }
+        });
+
+        diceStyleP1.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JDialog d = new JDialog();
+                d.setLayout( new GridLayout(10,1,0,0) );
+                String[] dicesStyles = {"revolver","skull","savage unicorn","cosmic astronaut","plant of death", "crown","little cow"};
+                d.add( new JLabel ("Choose a dice style"));
+                JButton b=new JButton("Ok");
+                b.setBounds(200,100,75,20);
+                for (int i = 0; i < optPlayers; i++) {
+                    JComboBox cb=new JComboBox(dicesStyles);
+                    cb.setBounds(50, 50,90,20);
+                    d.add(new JLabel("Player " + (i+1) ));
+                    d.add(cb);
+                    b.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            String data = ""+ cb.getItemAt(cb.getSelectedIndex());
+                            System.out.println(data);
+                            d.setVisible(false);
+                        }
+                    });
+                }
+                d.add(b);
+                d.setSize(400,400);
+                d.setVisible(true);
+            }
+        });
+
+        playMode1.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                goToBoard();
+            }
+        });
+
     }
 
 
@@ -411,6 +501,13 @@ public class PoobchisGUI extends JFrame {
 //        prepareActionsMenu();
         home.setVisible(true);
 
+    }
+
+    private void goToBoard() {
+        mode1.setVisible(false);
+        prepareElementsBoard();
+        prepareActions();
+        boardBackground.setVisible(true);
     }
 
     public static void main(String[] args) {
