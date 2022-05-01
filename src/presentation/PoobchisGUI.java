@@ -63,9 +63,9 @@ public class PoobchisGUI extends JFrame {
 
     private PoobchisGUI()
     {
+        poobchis = new Poobchis();
         prepareElements();
         prepareActions();
-        poobchis = new Poobchis();
     }
 
     private void prepareElements(){
@@ -157,7 +157,10 @@ public class PoobchisGUI extends JFrame {
         southButtons.add(dice1);
         southButtons.add(dice2);
         power = new JLabel("POWER");
-        powerful = new JButton("Bunny");
+        Icon iconPower = new ImageIcon("images/powers/jumper.png");
+        powerful = new JButton();
+        powerful.setIcon(iconPower);
+        powerful.setBackground(Color.white);
         southButtons.add(power);
         southButtons.add(powerful);
         boardBackground.add(southButtons, BorderLayout.SOUTH);
@@ -167,7 +170,7 @@ public class PoobchisGUI extends JFrame {
         // Board
 //        ImageIcon img = new javax.swing.ImageIcon("template3.png");
 //        JLabel image = new javax.swing.JLabel(img);
-        BoardView image = new BoardView(this);
+        BoardView image = new BoardView(this, poobchis.getBoard().buildMatrix());
         // Piece
         JPanel boardImg2 = new JPanel();
         ImageIcon imgPiece = new javax.swing.ImageIcon("images/pieces/5.png");
@@ -307,6 +310,8 @@ public class PoobchisGUI extends JFrame {
         // Mode 1 buttons
         prepareActionsSettingsMode1();
 
+        // Dices
+        prepareActionsBoard();
 
     }
     private void prepareActionsMenu() {
@@ -558,6 +563,27 @@ public class PoobchisGUI extends JFrame {
         prepareElementsBoard();
         prepareActions();
         boardBackground.setVisible(true);
+    }
+
+    private void prepareActionsBoard() {
+        dice1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                actionRollDice();
+            }
+        });
+        dice2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                actionRollDice();
+            }
+        });
+    }
+
+
+    private void actionRollDice() {
+        Player player1 = new Player();
+        int[] result = player1.getValueDice();
+        dice1.setText(String.valueOf(result[0]));
+        dice2.setText(String.valueOf(result[1]));
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,8 @@
 package presentation;
 
+import domain.Box;
 import domain.Poobchis;
+import domain.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,6 +65,7 @@ import java.awt.event.ActionListener;
 
 class BoardView extends JPanel{
     private PoobchisGUI gui;
+    private Box[][] completeMatrix;
 
     // COLORS
     private Color blueHome = new Color(0x805FF2EE,true);
@@ -71,8 +74,9 @@ class BoardView extends JPanel{
     private Color yellowHome = new Color(0x80F9A72B,true);
     private Color grayBox = new Color(0xBF66635B,true);
 
-    public BoardView(PoobchisGUI gui) {
+    public BoardView(PoobchisGUI gui, Box[][] completeMatrix) {
         this.gui=gui;
+        this.completeMatrix = completeMatrix;
         setBackground(Color.white);
         setPreferredSize(new Dimension(980, 950));
     }
@@ -112,25 +116,15 @@ class BoardView extends JPanel{
 
         for (int f=0;f<gui.LENGTH;f++){
             for(int c=0;c<gui.LENGTH;c++){
-//                if (automata.getItem(f,c)!=null){
-                if (true){
-//                    g.setColor(automata.getItem(f,c).getColor());
-                    g.setColor(blueHome);
-//                    if (automata.getItem(f,c).shape()==Item.SQUARE){
+//                System.out.println("SI ENTRA FUERA");
+                if (completeMatrix[f][c] != null){
+//                    System.out.println("SI ENTRA");
+                    g.setColor(completeMatrix[f][c].getColor());
                         if (true){
-//                            g.fillRoundRect(gui.SIDE*c+1,gui.SIDE*f+1,gui.SIDE-2,gui.SIDE-2,2,2);
                             g.fillRoundRect(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2,2,2);
                         }else{
-//                            g.drawRoundRect(gui.SIDE*c+1,gui.SIDE*f+1,gui.SIDE-2,gui.SIDE-2,2,2);
                             g.drawRoundRect(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2,2,2);
                         }
-//                    }else {
-//                        if (automata.getItem(f,c).isAlive()){
-//                            g.fillOval(gui.SIDE*c+1,gui.SIDE*f+1,gui.SIDE-2,gui.SIDE-2);
-//                        } else {
-//                            g.drawOval(gui.SIDE*c+1,gui.SIDE*f+1,gui.SIDE-2,gui.SIDE-2);
-//                        }
-//                    }
                 }
             }
         }
