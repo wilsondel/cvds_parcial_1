@@ -3,10 +3,7 @@ package presentation;
 import domain.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
@@ -36,8 +33,14 @@ public class PoobchisGUI extends JFrame {
     // // Mode 1
     private JPanel mode1;
     private JButton powerP1,colorP1,diceStyleP1, playMode1;
+    // // JDialog
+    private JButton buttonOk = new JButton("Ok");
+    // // JDialog checkboxes powers text
+    ArrayList<String> powers = new ArrayList<String>();
+
     //// player amount
     private JDialog playerAmount;
+    private ArrayList<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
 
     // Board
 
@@ -63,6 +66,7 @@ public class PoobchisGUI extends JFrame {
 
     private void prepareElements(){
         setTitle("POOBchis");
+        this.setIconImage((new ImageIcon("logo.png")).getImage());
         textCode = new JTextField(50);
         textName = new JTextField(50);
         textCredits = new JTextField(50);
@@ -173,7 +177,15 @@ public class PoobchisGUI extends JFrame {
     private void prepareElementsHome() {
         home = new JPanel();
         home.setLayout(new BorderLayout(Toolkit.getDefaultToolkit().getScreenSize().width/9, 5));
+//        home.setLayout(null);
         add(home);
+
+//        //Background
+//        ImageIcon imagenFondo = new ImageIcon("background.png");
+//        JLabel fondo = new JLabel();
+//        fondo.setBounds(-50,0,980,950);
+//        fondo.setIcon(imagenFondo);
+//        home.add(fondo);
 
         ImageIcon img = new javax.swing.ImageIcon("logo.png");
         JLabel image = new javax.swing.JLabel(img);
@@ -197,6 +209,7 @@ public class PoobchisGUI extends JFrame {
         buttonExit.setBackground(Color.decode("#ffebdb"));
         homeButtons.add(buttonExit);
         home.add(homeButtons, BorderLayout.CENTER);
+
     }
 
     private void prepareElementsChooseModes() {
@@ -360,36 +373,68 @@ public class PoobchisGUI extends JFrame {
         });
     }
 
+    private void addingCheckBox(JDialog d) {
+        JCheckBox checkbox1 = new JCheckBox("Advantageous");
+        JCheckBox checkbox2 = new JCheckBox("Hoover");
+        JCheckBox checkbox3 = new JCheckBox("Jumper");
+        JCheckBox checkbox4 = new JCheckBox("Normal");
+//        checkbox1.addItemListener(new ItemListener() {
+//            public void itemStateChanged(ItemEvent e) {
+//                System.out.println(e.getStateChange() == 1 ?  "Checked" : "unchecked");
+//            }
+//        });
+        d.add(checkbox1);
+        d.add(checkbox2);
+        d.add(checkbox3);
+        d.add(checkbox4);
+        checkBoxList.add(checkbox1);
+        checkBoxList.add(checkbox2);
+        checkBoxList.add(checkbox3);
+        checkBoxList.add(checkbox4);
+    }
+    private void actionCheckBoxPower() {
+        for (int i = 0; i < optPlayers; i++) {
+            JDialog d = new JDialog();
+            if (i == 1) d.setLocation(500, 0);
+            d.setLayout(new GridLayout(15, 1, 0, 0));
+            d.add(new JLabel("Choose a power"));
+            d.add(new JLabel("Please, choose 4 pieces options."));
+            buttonOk = new JButton("Ok");
+            buttonOk.setBounds(200, 100, 75, 20);
+            d.add(new JLabel("Player " + (i + 1)));
+            addingCheckBox(d);
+            addingCheckBox(d);
+            buttonOk.addActionListener( new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    actionCheckedOkBoxPower(d);
+                }
+            });
+            d.add(buttonOk);
+            d.setSize(420, 420);
+            d.setVisible(true);
+        }
+    }
+
+    private void actionCheckedOkBoxPower(JDialog d) {
+//        int i = 0; TODO: list from the expected index position
+        for (JCheckBox c : checkBoxList ) {
+            if (c.isSelected()) {
+                powers.add(c.getText());
+//                System.out.println(powers.get(i));
+//                i++;
+            }
+        }
+//        powers = new ArrayList<String>();
+        d.setVisible(false);
+    }
+
     private void prepareActionsSettingsMode1() {
 
         powerP1.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JDialog d = new JDialog();
-                d.setLayout( new GridLayout(10,1,0,0) );
-                String[] dicesStyles = {"0","1","2"};
-                d.add( new JLabel ("Choose a power"));
-                JButton b=new JButton("Ok");
-                b.setBounds(200,100,75,20);
-                for (int i = 0; i < optPlayers; i++) {
-                    d.add( new JLabel ("Advantageous"));
-                    JComboBox cbAdvantage=new JComboBox(dicesStyles);
-                    cbAdvantage.setBounds(50, 50,90,20);
-                    d.add(new JLabel("Player " + (i+1) ));
-                    d.add(cbAdvantage);
-                    b.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String data = ""+ cbAdvantage.getItemAt(cbAdvantage.getSelectedIndex());
-                            System.out.println(data);
-                            d.setVisible(false);
-                        }
-                    });
-                }
-                d.add(b);
-                d.setSize(400,400);
-                d.setVisible(true);
+                actionCheckBoxPower();
             }
         });
-
 
         colorP1.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
