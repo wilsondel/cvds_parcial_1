@@ -9,8 +9,9 @@ import javax.swing.*;
 
 public class PoobchisGUI extends JFrame {
 
-    private static final Dimension PREFERRED_DIMENSION = new Dimension(950,980);
-
+    private static final Dimension PREFERRED_DIMENSION = new Dimension(1200,1000);
+    // GUI
+    private static PoobchisGUI guiAux;
     // POObchis
     Poobchis poobchis;
     int optPlayers=2;
@@ -48,7 +49,10 @@ public class PoobchisGUI extends JFrame {
     private JButton dice1, dice2, powerful;
     // labels
     private JLabel playerTurn, power;
-
+    // SIZES
+    public static final int SIDE=20;
+    public static final int SIZE=20;
+    public static final int LENGTH=20;
 
 
     /*Panel buttonAdd*/
@@ -76,7 +80,7 @@ public class PoobchisGUI extends JFrame {
         JTabbedPane labels = new JTabbedPane();
         getContentPane().add(labels);
         setSize(PREFERRED_DIMENSION);
-        setResizable(false);
+//        setResizable(false); TODO: RESIZE
 //        setSize((Toolkit.getDefaultToolkit().getScreenSize().width) , (Toolkit.getDefaultToolkit().getScreenSize().height));
 //        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width), (Toolkit.getDefaultToolkit().getScreenSize().height) );
 
@@ -161,8 +165,9 @@ public class PoobchisGUI extends JFrame {
         JPanel boardImg = new JPanel();
 //        homeButtons.setLayout(new GridLayout(5,5));
         // Board
-        ImageIcon img = new javax.swing.ImageIcon("template3.png");
-        JLabel image = new javax.swing.JLabel(img);
+//        ImageIcon img = new javax.swing.ImageIcon("template3.png");
+//        JLabel image = new javax.swing.JLabel(img);
+        BoardView image = new BoardView(this);
         // Piece
         JPanel boardImg2 = new JPanel();
         ImageIcon imgPiece = new javax.swing.ImageIcon("images/pieces/5.png");
@@ -557,6 +562,7 @@ public class PoobchisGUI extends JFrame {
 
     public static void main(String[] args) {
         PoobchisGUI gui = new PoobchisGUI();
+        guiAux = gui;
         gui.setVisible(true);
     }
 }
