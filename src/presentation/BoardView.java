@@ -9,70 +9,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//public class BoardView extends JFrame {
-//    public static final int SIDE=20;
-//    public static final int SIZE=20;
-//
-//    private JButton buttonTicTac;
-//    private JPanel panelControl;
-//    private PhotoAutomata photo;
-////    private CellularAutomata automata;
-//
-//    private BoardView() {
-////        Poobchis poobchis = new Poobchis();
-//        prepareElements();
-//        prepareActions();
-//    }
-//
-//    private void prepareElements() {
-////        setTitle("Automata celular");
-//        photo=new PhotoAutomata(this);
-//        buttonTicTac=new JButton("Tic-tac");
-//        setLayout(new BorderLayout());
-//        add(photo,BorderLayout.NORTH);
-//        add(buttonTicTac,BorderLayout.SOUTH);
-//        setSize(new Dimension(980,950));
-//        //setResizable(false);
-//        photo.repaint();
-//    }
-//
-//    private void prepareActions(){
-//        setDefaultCloseOperation(EXIT_ON_CLOSE);
-//        buttonTicTac.addActionListener(
-//                new ActionListener(){
-//                    public void actionPerformed(ActionEvent e) {
-//                        buttonTicTacAction();
-//                    }
-//                });
-//
-//    }
-//
-//    private void buttonTicTacAction() {
-//        automata.ticTac();
-//        photo.repaint();
-//    }
-//
-//    public CellularAutomata getAutomata(){
-//        return automata;
-//    }
-//
-//    public static void main(String[] args) {
-//        AutomataGUI ca=new AutomataGUI();
-//        ca.setVisible(true);
-//    }
-//
-//}
-
 class BoardView extends JPanel{
     private PoobchisGUI gui;
     private Box[][] completeMatrix;
 
     // COLORS
-    private Color blueHome = new Color(0x805FF2EE,true);
-    private Color redHome = new Color(0x80FF1616,true);
-    private Color greenHome = new Color(0x807FB95F,true);
-    private Color yellowHome = new Color(0x80F9A72B,true);
-    private Color grayBox = new Color(0xBF66635B,true);
+    private Color blueHome = new Color(0xFF356DE8,true);
+    private Color redHome = new Color(0xE6FF1616,true);
+    private Color greenHome = new Color(0xE67FB95F,true);
+    private Color yellowHome = new Color(0xE6F9A72B,true);
+    private Color grayBox = new Color(0xE666635B,true);
 
     public BoardView(PoobchisGUI gui, Box[][] completeMatrix) {
         this.gui=gui;
@@ -85,7 +31,7 @@ class BoardView extends JPanel{
     public void paintComponent(Graphics g){
 //        CellularAutomata automata=gui.getAutomata();
         super.paintComponent(g);
-
+        g.setColor( new Color(0xFFB6B6B6,true));
 
         for (int f=0;f<=gui.LENGTH;f++){
             g.drawLine(f*gui.SIDE*2,0,f*gui.SIDE*2,gui.LENGTH*gui.SIDE*2);
@@ -117,14 +63,19 @@ class BoardView extends JPanel{
         for (int f=0;f<gui.LENGTH;f++){
             for(int c=0;c<gui.LENGTH;c++){
 //                System.out.println("SI ENTRA FUERA");
-                if (completeMatrix[f][c] != null){
-//                    System.out.println("SI ENTRA");
-                    g.setColor(completeMatrix[f][c].getColor());
-                        if (true){
-                            g.fillRoundRect(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2,2,2);
-                        }else{
-                            g.drawRoundRect(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2,2,2);
+                if (completeMatrix[f][c] != null) {
+                    if (completeMatrix[f][c].getState().equals("")) {
+                        //                    System.out.println("SI ENTRA");
+                        g.setColor(completeMatrix[f][c].getColor());
+                        if (true) {
+                            g.fillRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
+                        } else {
+                            g.drawRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
                         }
+                    } else if (completeMatrix[f][c].getState().equals("1")) {
+                        g.setColor(completeMatrix[f][c].getColor());
+                        g.fillOval(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2);
+                    }
                 }
             }
         }

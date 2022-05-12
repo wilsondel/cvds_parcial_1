@@ -1,6 +1,7 @@
 package domain;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Board {
     // Boxes
@@ -13,11 +14,17 @@ public class Board {
     private Box[][] completeMatrix;
 
     // COLORS
-    private Color blueHome = new Color(0x805FF2EE,true);
-    private Color redHome = new Color(0x80FF1616,true);
-    private Color greenHome = new Color(0x807FB95F,true);
-    private Color yellowHome = new Color(0x80F9A72B,true);
+    private Color blueHome = new Color(0xBF5FF2EE,true);
+    private Color redHome = new Color(0xBFFF1616,true);
+    private Color greenHome = new Color(0xBF81F141,true);
+    private Color yellowHome = new Color(0xBFF9A72B,true);
     private Color grayBox = new Color(0xBF66635B,true);
+
+    // List boxes
+    private ArrayList<Box> mainBoxes;
+    private Safe baseP1;
+    private Safe baseP2;
+
 
     public Board(){
         boxes = new Box[56];
@@ -25,8 +32,31 @@ public class Board {
         homeWays = new HomeWay[28];
         successes = new Success[4];
         completeMatrix = new Box[20][20];
+        for(int i = 0; i < completeMatrix.length;i++){
+            for(int j = 0; j < completeMatrix.length;j++){
+                completeMatrix[i][j] = new Box();
+            }
+        }
+        mainBoxes = new  ArrayList<Box>(68);
+        for (int i = 0; i < 68;i++){
+            mainBoxes.add(new Box());
+        }
+        baseP1 = new Safe();
+        baseP2 = new Safe();
+        int[] namesP1 = {1,2,3,4};
+        int[] namesP2 = {4,5,6,7};
+        initialBase(baseP1,redHome,namesP1);
+        initialBase(baseP2,blueHome,namesP2);
 
     }
+
+    public void initialBase(Safe base, Color color, int[] names) {
+        base.addPiece(new Piece(color,names[0]));
+        base.addPiece(new Piece(color,names[1]));
+        base.addPiece(new Piece(color,names[2]));
+        base.addPiece(new Piece(color,names[3]));
+    }
+
 
     public Box[][] getCompleteMatrix() {
         return completeMatrix;
@@ -51,14 +81,14 @@ public class Board {
     private void blueBase(Color colorBox){
         for (int i = 0; i < 7; i++){
             for (int j = 0; j<7;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new Safe(colorBox);
             }
         }
-        completeMatrix[4][7] = new Box(colorBox);
-        completeMatrix[4][8] = new Box(colorBox);
+        completeMatrix[4][7] = new Safe(colorBox);
+        completeMatrix[4][8] = new Safe(colorBox);
         for (int i = 1; i <= 6; i++){
             for (int j = 9; j<= 10;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new HomeWay(colorBox);
             }
         }
 
@@ -67,32 +97,34 @@ public class Board {
     private void yellowBase(Color colorBox){
         for (int i = 0; i <7; i++){
             for (int j = 13; j<20;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new Safe(colorBox);
             }
         }
-        completeMatrix[7][15] = new Box(colorBox);
-        completeMatrix[8][15] = new Box(colorBox);
+        completeMatrix[7][15] = new Safe(colorBox);
+        completeMatrix[8][15] = new Safe(colorBox);
 
         for (int i = 9; i <= 10; i++){
             for (int j = 13; j< 19;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new HomeWay(colorBox);
             }
         }
+        int[][] position = { {1,14},{1,18},{5,14},{5,18} };
+        addPiecesBase( position,yellowHome);
 
     }
 
     private void greenBase(Color colorBox){
         for (int i = 13; i <20; i++){
             for (int j = 13; j<20;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new Safe(colorBox);
             }
         }
-        completeMatrix[15][12] = new Box(colorBox);
-        completeMatrix[15][11] = new Box(colorBox);
+        completeMatrix[15][12] = new Safe(colorBox);
+        completeMatrix[15][11] = new Safe(colorBox);
 
         for (int i = 13; i < 19; i++){
             for (int j = 9; j<= 10;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new HomeWay(colorBox);
             }
         }
 
@@ -100,63 +132,131 @@ public class Board {
     private void redBase(Color colorBox){
         for (int i = 13; i <20; i++){
             for (int j = 0; j<7;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new Safe(colorBox);
             }
         }
-        completeMatrix[11][4] = new Box(colorBox);
-        completeMatrix[12][4] = new Box(colorBox);
+        completeMatrix[11][4] = new Safe(colorBox);
+        completeMatrix[12][4] = new Safe(colorBox);
 
         for (int i = 9; i <= 10; i++){
             for (int j = 1; j<= 6;j++){
-                completeMatrix[i][j] = new Box(colorBox);
+                completeMatrix[i][j] = new HomeWay(colorBox);
             }
         }
+        int[][] position = { {14,1},{14,5},{18,1},{18,5} };
+        addPiecesBase( position,redHome);
+    }
 
+    private void addPiecesBase(int[][] position, Color colorPiece){
+        for (int[] pos : position){
+            completeMatrix[pos[0]][pos[1]].addPiece(new Piece(colorPiece));
+        }
     }
 
     private void safeBox(Color colorBox){
-        completeMatrix[0][9] = new Box(colorBox);
-        completeMatrix[0][10] = new Box(colorBox);
-        completeMatrix[4][11] = new Box(colorBox);
-        completeMatrix[4][12] = new Box(colorBox);
-        completeMatrix[9][19] = new Box(colorBox);
-        completeMatrix[10][19] = new Box(colorBox);
-        completeMatrix[11][15] = new Box(colorBox);
-        completeMatrix[12][15] = new Box(colorBox);
-        completeMatrix[19][9] = new Box(colorBox);
-        completeMatrix[19][10] = new Box(colorBox);
-        completeMatrix[15][7] = new Box(colorBox);
-        completeMatrix[15][8] = new Box(colorBox);
-        completeMatrix[9][0] = new Box(colorBox);
-        completeMatrix[10][0] = new Box(colorBox);
-        completeMatrix[7][4] = new Box(colorBox);
-        completeMatrix[8][4] = new Box(colorBox);
+        completeMatrix[0][9] = new Safe(colorBox);
+        completeMatrix[0][10] = new Safe(colorBox);
+        completeMatrix[4][11] = new Safe(colorBox);
+        completeMatrix[4][12] = new Safe(colorBox);
+        completeMatrix[9][19] = new Safe(colorBox);
+        completeMatrix[10][19] = new Safe(colorBox);
+        completeMatrix[11][15] = new Safe(colorBox);
+        completeMatrix[12][15] = new Safe(colorBox);
+        completeMatrix[19][9] = new Safe(colorBox);
+        completeMatrix[19][10] = new Safe(colorBox);
+        completeMatrix[15][7] = new Safe(colorBox);
+        completeMatrix[15][8] = new Safe(colorBox);
+        completeMatrix[9][0] = new Safe(colorBox);
+        completeMatrix[10][0] = new Safe(colorBox);
+        completeMatrix[7][4] = new Safe(colorBox);
+        completeMatrix[8][4] = new Safe(colorBox);
     }
 
     private void successBox(Color colorBox){
         //red
-        completeMatrix[9][7] = new Box(colorBox);
-        completeMatrix[9][8] = new Box(colorBox);
-        completeMatrix[10][7] = new Box(colorBox);
-        completeMatrix[10][8] = new Box(colorBox);
+        completeMatrix[9][7] = new Success(colorBox);
+        completeMatrix[9][8] = new Success(colorBox);
+        completeMatrix[10][7] = new Success(colorBox);
+        completeMatrix[10][8] = new Success(colorBox);
         // green
-        completeMatrix[9][11] = new Box(colorBox);
-        completeMatrix[10][11] = new Box(colorBox);
-        completeMatrix[9][12] = new Box(colorBox);
-        completeMatrix[10][12] = new Box(colorBox);
+        completeMatrix[9][11] = new Success(colorBox);
+        completeMatrix[10][11] = new Success(colorBox);
+        completeMatrix[9][12] = new Success(colorBox);
+        completeMatrix[10][12] = new Success(colorBox);
         //yellow
-        completeMatrix[11][9] = new Box(colorBox);
-        completeMatrix[11][10] = new Box(colorBox);
-        completeMatrix[12][9] = new Box(colorBox);
-        completeMatrix[12][10] = new Box(colorBox);
+        completeMatrix[11][9] = new Success(colorBox);
+        completeMatrix[11][10] = new Success(colorBox);
+        completeMatrix[12][9] = new Success(colorBox);
+        completeMatrix[12][10] = new Success(colorBox);
         //blue
-        completeMatrix[7][9] = new Box(colorBox);
-        completeMatrix[8][9] = new Box(colorBox);
-        completeMatrix[7][10] = new Box(colorBox);
-        completeMatrix[8][10] = new Box(colorBox);
+        completeMatrix[7][9] = new Success(colorBox);
+        completeMatrix[8][9] = new Success(colorBox);
+        completeMatrix[7][10] = new Success(colorBox);
+        completeMatrix[8][10] = new Success(colorBox);
 
     }
 
+    public void evaluateBox(int[] result, Player player,int numberName) {
+//        mainBoxes
+        // Base validation
+        validateOutBase(result,player.getName());
+        // Box validation
+//        validateNormalBox(result,player.getName(),numberName);
+
+    }
+
+    public void validateOutBase(int[] result, String player){
+        int amountPieces;
+        if (player.equals("P1") || true) {
+            amountPieces = baseP1.getPieces().size();
+            if (amountPieces > 0) outBase(result,player);
+        }
+    }
+
+    public void outBase(int[] result, String player) {
+        int totalDiceSum = result[0] + result[1];
+        if (player.equals("P1") || true) {
+            if (result[0] == 5 && result[1] == 5) {
+                mainBoxes.get(0).addPiece(baseP1.outBase("1"));
+            } else if (result[0] == 5 || result[1] == 5 || totalDiceSum == 5) {
+                mainBoxes.get(0).addPiece(baseP1.outBase("2"));
+            }
+            if (mainBoxes.get(0).getPieces().size()>=1){
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
+                completeMatrix[14][1].removePiece();
+//                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
+            }
+
+        }
+    }
+
+    public void validateNormalBox(int result, String player,int numberName) {
+        movePiece(result,player,numberName);
+    }
+
+    public void movePiece(int result, String player,int numberName){
+        boolean flag = true;
+        int referenceIndex = 0;
+        // Locate piece
+        for (int i = 0 ; i < mainBoxes.size() ; i++) {
+            ArrayList<Integer> boxPieces = mainBoxes.get(i).lookPieces();
+            if(boxPieces.contains(numberName)) {
+                referenceIndex = i;
+                flag = false;
+            }
+        }
+        // get the reference of the piece
+        Piece movePiece = mainBoxes.get(referenceIndex).pieceReference(numberName);
+        // remove the piece using the reference
+        mainBoxes.get(referenceIndex).removePiece(movePiece);
+        // move the piece
+        if ((referenceIndex + result) >= 68) referenceIndex = 0; // TODO: REPOSICION DE ELEMENTO IRIA DESDE EL INICIO
+        referenceIndex += result;
+        // add the piece using the reference
+        mainBoxes.get(referenceIndex).addPiece(movePiece);
+
+
+    }
 
     public void refresh() {}
 

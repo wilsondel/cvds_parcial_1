@@ -44,7 +44,7 @@ public class PoobchisGUI extends JFrame {
     private ArrayList<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
 
     // Board
-
+    private BoardView imageBoard;
     // Board Buttons
     private JButton dice1, dice2, powerful;
     // labels
@@ -170,12 +170,12 @@ public class PoobchisGUI extends JFrame {
         // Board
 //        ImageIcon img = new javax.swing.ImageIcon("template3.png");
 //        JLabel image = new javax.swing.JLabel(img);
-        BoardView image = new BoardView(this, poobchis.getBoard().buildMatrix());
+        imageBoard = new BoardView(this, poobchis.getBoard().buildMatrix());
         // Piece
         JPanel boardImg2 = new JPanel();
         ImageIcon imgPiece = new javax.swing.ImageIcon("images/pieces/5.png");
         JLabel imagePiece = new javax.swing.JLabel(imgPiece);
-        boardImg.add(image);
+        boardImg.add(imageBoard);
         boardImg2.add(imagePiece);
         boardImg2.setBounds(500,500,300,300);
 //        boardBackground.add(boardImg2, BorderLayout.CENTER);
@@ -580,10 +580,12 @@ public class PoobchisGUI extends JFrame {
 
 
     private void actionRollDice() {
-        Player player1 = new Player();
+        Player player1 = new Player("P1");
         int[] result = player1.getValueDice();
         dice1.setText(String.valueOf(result[0]));
         dice2.setText(String.valueOf(result[1]));
+        poobchis.play("P1", 1); // TODO: nameNumber
+        imageBoard.repaint();
     }
 
     public static void main(String[] args) {
