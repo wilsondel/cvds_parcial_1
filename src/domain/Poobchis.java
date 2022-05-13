@@ -10,13 +10,21 @@ public class Poobchis {
         p2 = new Player("P2");
     }
 
+    public Player getP1() {
+        return p1;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
     public void finish() {
         System.exit(0);
     }
 
-    public void play(String player, int nameNumber){ // TODO: nameNumber
-        int[] result = p1.getValueDice();
-        System.out.println("RESULT: " + result[0] + "," +result[1]);
+    public void play(String player, int[] result,int nameNumber){ // TODO: nameNumber
+//        int[] result = p1.getRealValue();
+//        System.out.println("RESULT: " + result[0] + "," +result[1]);
         board.evaluateBox(result,p1,1); //TODO: COLOCAR ARGUMENTO DE QUE FICHA VA A AVANZAR
 
 

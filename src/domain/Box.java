@@ -23,6 +23,14 @@ public class Box {
 
     }
 
+    public Color getColorPiece(){
+        Color colorPiece = color;
+        if (pieces.size() == 1) {
+            colorPiece = pieces.get(0).getColor();
+        }
+        return colorPiece;
+    }
+
     public ArrayList<Piece> getPieces() {
         return pieces;
     }

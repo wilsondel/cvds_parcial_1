@@ -23,7 +23,7 @@ class BoardView extends JPanel{
     public BoardView(PoobchisGUI gui, Box[][] completeMatrix) {
         this.gui=gui;
         this.completeMatrix = completeMatrix;
-        setBackground(Color.white);
+        setBackground(Color.GRAY);
         setPreferredSize(new Dimension(980, 950));
     }
 
@@ -66,14 +66,15 @@ class BoardView extends JPanel{
                 if (completeMatrix[f][c] != null) {
                     if (completeMatrix[f][c].getState().equals("")) {
                         //                    System.out.println("SI ENTRA");
-                        g.setColor(completeMatrix[f][c].getColor());
+//                        System.out.println("COLOR: " + completeMatrix[f][c].getColorPiece().toString());
+                        g.setColor(completeMatrix[f][c].getColorPiece());
                         if (true) {
                             g.fillRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
                         } else {
                             g.drawRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
                         }
                     } else if (completeMatrix[f][c].getState().equals("1")) {
-                        g.setColor(completeMatrix[f][c].getColor());
+                        g.setColor(completeMatrix[f][c].getColorPiece());
                         g.fillOval(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2);
                     }
                 }

@@ -1,7 +1,11 @@
 package domain;
 
+import com.sun.xml.internal.ws.model.wsdl.WSDLOutputImpl;
+
 import java.awt.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Board {
     // Boxes
@@ -24,6 +28,9 @@ public class Board {
     private ArrayList<Box> mainBoxes;
     private Safe baseP1;
     private Safe baseP2;
+
+    // Boxes position domain
+    //private int[][][] boxesPosition;
 
 
     public Board(){
@@ -196,12 +203,13 @@ public class Board {
 
     }
 
+
     public void evaluateBox(int[] result, Player player,int numberName) {
 //        mainBoxes
         // Base validation
         validateOutBase(result,player.getName());
         // Box validation
-//        validateNormalBox(result,player.getName(),numberName);
+        validateNormalBox(result[0],player.getName(),numberName); // TODO: cambiar valor por 1 solo dado :(
 
     }
 
@@ -231,6 +239,7 @@ public class Board {
     }
 
     public void validateNormalBox(int result, String player,int numberName) {
+        result=1; // TODO: quitar esto :(
         movePiece(result,player,numberName);
     }
 
@@ -249,14 +258,76 @@ public class Board {
         Piece movePiece = mainBoxes.get(referenceIndex).pieceReference(numberName);
         // remove the piece using the reference
         mainBoxes.get(referenceIndex).removePiece(movePiece);
+//        System.out.println("REFERENCE INDEX IS: " + referenceIndex);
+
         // move the piece
         if ((referenceIndex + result) >= 68) referenceIndex = 0; // TODO: REPOSICION DE ELEMENTO IRIA DESDE EL INICIO
+        //Update the matrix
+        refreshCompleteMatrix(result,numberName,referenceIndex, movePiece);
         referenceIndex += result;
         // add the piece using the reference
         mainBoxes.get(referenceIndex).addPiece(movePiece);
 
-
     }
+
+    public void refreshCompleteMatrix(int result,int numberName, int referenceIndex, Piece movePiece) {
+//        System.out.println("RESULT IS: " + result);
+//        System.out.println("REFERENCE INDEX IS: " + referenceIndex);
+        int totalMove = referenceIndex + result;
+//        mainBoxes;
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("REFERENCE INDEX IS: " + referenceIndex + " RESULT: " + result);
+        System.out.println("ANTES CASILLA: " + getBoxReferencePosition()[referenceIndex][0][0] + "," + getBoxReferencePosition()[referenceIndex][0][1] );
+        System.out.println("RESULTADO DEL DADO: " + result);
+        System.out.println("DESPUES CASILLA: " + getBoxReferencePosition()[totalMove][0][0] + "," + getBoxReferencePosition()[totalMove][0][1] );
+        System.out.println("---------------------------------------------------------------");
+        completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].addPiece(movePiece);
+        completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].removePiece(movePiece);
+//        initializeBoxReferencePosition()[totalMove][0];
+//        initializeBoxReferencePosition()[totalMove][1];
+//        for (int i = 0; i < getBoxReferencePosition().length;i++ ){
+////            for (int j = 0; j < getBoxReferencePosition().length;j++ ){
+//
+//                completeMatrix[getBoxReferencePosition()[i][0][0]][getBoxReferencePosition()[i][0][1]].addPiece(new Piece(Color.CYAN));
+//                completeMatrix[getBoxReferencePosition()[i][1][0]][getBoxReferencePosition()[i][1][1]].addPiece(new Piece(Color.CYAN));
+//                //
+////                Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+////                System.out.println("Next: ");
+////                String userName = myObj.nextLine();  // Read user input
+//                //
+////            }
+//        }
+        System.out.println("LONGITUD: " + getBoxReferencePosition().length);
+    }
+
+
+    public int[][][] getBoxReferencePosition(){
+        int[][][] boxesPosition = {
+
+                // Red path
+                {{11,4},{12, 4}},{{11,5},{12,5}},{{11,6},{12,6}},{{11,7},{12,7}},{{11,8},{12,8}},
+                {{13,8},{13,7}},{{14,8},{14,7}},{{15,8},{15,7}},{{16,8},{16,7}},{{17,8},{17,7}},{{18,8},{18,7}},{{19,8},{19,7}},
+                {{19,9},{19,10}},{{19,11},{19,12}},{{18,11},{18,12}},{{17,11},{17,12}},{{16,11},{16,12}},
+
+                // Green path
+                {{15, 11}, {15, 12}},{{14,11},{14,12}},{{13,11},{13,12}},{{12,11},{12,12}},{{11,11},{11,12}},
+                {{12,13},{11,13}},{{12,14},{11,14}},{{12,15}, {11,15}},{{12,16},{11,16}},{{12,17},{11,17}},{{12,18},{11,18}},{{12,19},{11,19}},
+                {{10,19},{9,19}},{{8,19},{7,19}},{{8,18}, {7,18}},{{8,17},{7,17}},{{8,16},{7,16}},
+
+                // Yellow path
+                {{7,15},{8, 15}},{{7,14},{8,14}},{{7,13},{8,13}},{{7,12},{8,12}},{{7,11},{8,11}},
+                {{6,12},{6,11}},{{5,12},{5,11}},{{4,12},{4,11}},{{3,12},{3,11}},{{2,12},{2,11}},{{1,12},{1,11}},{{0,12},{0,11}},
+                {{0,10},{0,9}},{{0,8},{0,7}},{{1,8},{1,7}},{{2,8},{2,7}},{{3,8},{3,7}},
+
+                // Blue path
+                {{4,7},{4,8}},{{5,7},{5,8}},{{6,7},{6,8}},{{7,7},{7,8}},{{8,7},{8,8}},
+                {{8,6},{7,6}},{{8,5},{7,5}},{{8,4},{7,4}},{{8,3},{7,3}},{{8,2},{7,2}},{{8,1},{7,1}},{{8,0},{7,0}},
+                {{10,0},{9,0}},{{12,0},{11,0}},{{12,1},{11,1}},{{12,2},{11,2}},{{12,3},{11,3}}
+
+        };
+        return boxesPosition;
+    }
+
 
     public void refresh() {}
 

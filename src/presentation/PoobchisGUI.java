@@ -70,7 +70,7 @@ public class PoobchisGUI extends JFrame {
 
     private void prepareElements(){
         setTitle("POOBchis");
-        this.setIconImage((new ImageIcon("logo.png")).getImage());
+        this.setIconImage((new ImageIcon("minilogo.png")).getImage());
         textCode = new JTextField(50);
         textName = new JTextField(50);
         textCredits = new JTextField(50);
@@ -580,11 +580,11 @@ public class PoobchisGUI extends JFrame {
 
 
     private void actionRollDice() {
-        Player player1 = new Player("P1");
-        int[] result = player1.getValueDice();
+//        Player player1 = new Player("P1");
+        int[] result = poobchis.getP1().getValueDice();
         dice1.setText(String.valueOf(result[0]));
         dice2.setText(String.valueOf(result[1]));
-        poobchis.play("P1", 1); // TODO: nameNumber
+        poobchis.play("P1", result,1); // TODO: nameNumber
         imageBoard.repaint();
     }
 

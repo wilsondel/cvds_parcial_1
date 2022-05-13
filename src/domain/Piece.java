@@ -10,6 +10,10 @@ public class Piece {
     private ImageIcon image;
     private int numberName;
 
+    public Color getColor() {
+        return color;
+    }
+
     public int getNumberName() {
         return numberName;
     }
