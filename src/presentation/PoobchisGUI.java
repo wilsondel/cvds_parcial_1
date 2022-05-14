@@ -584,7 +584,8 @@ public class PoobchisGUI extends JFrame {
         int[] result = poobchis.getP1().getValueDice();
         dice1.setText(String.valueOf(result[0]));
         dice2.setText(String.valueOf(result[1]));
-        poobchis.play("P1", result,1); // TODO: nameNumber
+        int[] resultQUITAR = {5,5}; // TODO: quitar esto
+        poobchis.play("P1", resultQUITAR,1); // TODO: nameNumber
         imageBoard.repaint();
     }
 

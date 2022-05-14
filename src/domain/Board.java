@@ -210,7 +210,6 @@ public class Board {
         validateOutBase(result,player.getName());
         // Box validation
         validateNormalBox(result[0],player.getName(),numberName); // TODO: cambiar valor por 1 solo dado :(
-
     }
 
     public void validateOutBase(int[] result, String player){
@@ -229,10 +228,15 @@ public class Board {
             } else if (result[0] == 5 || result[1] == 5 || totalDiceSum == 5) {
                 mainBoxes.get(0).addPiece(baseP1.outBase("2"));
             }
-            if (mainBoxes.get(0).getPieces().size()>=1){
+            if (mainBoxes.get(0).getPieces().size()==1){
                 completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
                 completeMatrix[14][1].removePiece();
 //                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
+            } else if ((mainBoxes.get(0).getPieces().size()==2)) {
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
+                completeMatrix[14][1].removePiece();
+                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
+                completeMatrix[14][5].removePiece();
             }
 
         }
@@ -281,23 +285,15 @@ public class Board {
         System.out.println("RESULTADO DEL DADO: " + result);
         System.out.println("DESPUES CASILLA: " + getBoxReferencePosition()[totalMove][0][0] + "," + getBoxReferencePosition()[totalMove][0][1] );
         System.out.println("---------------------------------------------------------------");
+        // First Box
         completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].addPiece(movePiece);
         completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].removePiece(movePiece);
-//        initializeBoxReferencePosition()[totalMove][0];
-//        initializeBoxReferencePosition()[totalMove][1];
-//        for (int i = 0; i < getBoxReferencePosition().length;i++ ){
-////            for (int j = 0; j < getBoxReferencePosition().length;j++ ){
-//
-//                completeMatrix[getBoxReferencePosition()[i][0][0]][getBoxReferencePosition()[i][0][1]].addPiece(new Piece(Color.CYAN));
-//                completeMatrix[getBoxReferencePosition()[i][1][0]][getBoxReferencePosition()[i][1][1]].addPiece(new Piece(Color.CYAN));
-//                //
-////                Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-////                System.out.println("Next: ");
-////                String userName = myObj.nextLine();  // Read user input
-//                //
-////            }
-//        }
-        System.out.println("LONGITUD: " + getBoxReferencePosition().length);
+        // Second Box
+        completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].addPiece(movePiece);
+        completeMatrix[getBoxReferencePosition()[referenceIndex][1][0]][getBoxReferencePosition()[referenceIndex][1][1]].removePiece(movePiece);
+
+
+//        System.out.println("LONGITUD: " + getBoxReferencePosition().length);
     }
 
 
