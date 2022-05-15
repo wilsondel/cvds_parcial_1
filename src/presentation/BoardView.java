@@ -68,14 +68,16 @@ class BoardView extends JPanel{
                         //                    System.out.println("SI ENTRA");
 //                        System.out.println("COLOR: " + completeMatrix[f][c].getColorPiece().toString());
                         g.setColor(completeMatrix[f][c].getColorPiece());
-                        if (true) {
-                            g.fillRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
-                        } else {
-                            g.drawRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
-                        }
+//                        if (false) {
+                        g.fillRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
+//                        } else {
+//                            g.drawRoundRect(gui.SIDE * c * 2 + 1, gui.SIDE * f * 2 + 1, gui.SIDE * 2 - 2, gui.SIDE * 2 - 2, 2, 2);
+//                        }
                     } else if (completeMatrix[f][c].getState().equals("1")) {
                         g.setColor(completeMatrix[f][c].getColorPiece());
                         g.fillOval(gui.SIDE*c*2+1,gui.SIDE*f*2+1,gui.SIDE*2-2,gui.SIDE*2-2);
+                        g.setColor(Color.BLACK);
+                        g.drawString(String.valueOf(completeMatrix[f][c].getPieceNumber()),gui.SIDE*c*2+20,gui.SIDE*f*2+20);
                     }
                 }
             }

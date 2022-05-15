@@ -14,6 +14,10 @@ public class Piece {
         return color;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public int getNumberName() {
         return numberName;
     }

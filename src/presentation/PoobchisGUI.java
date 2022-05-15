@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import java.util.Scanner; //TODO: ojito => 0v0
 
 public class PoobchisGUI extends JFrame {
 
@@ -584,9 +585,82 @@ public class PoobchisGUI extends JFrame {
         int[] result = poobchis.getP1().getValueDice();
         dice1.setText(String.valueOf(result[0]));
         dice2.setText(String.valueOf(result[1]));
-        int[] resultQUITAR = {5,5}; // TODO: quitar esto
-        poobchis.play("P1", resultQUITAR,1); // TODO: nameNumber
-        imageBoard.repaint();
+//        int[] resultQUITAR = {5,5}; // TODO: quitar esto
+//        Scanner myObj = new Scanner(System.in);
+//        int name = Integer.parseInt(myObj.nextLine());
+
+        preparePieceDiceElements("1",result[0], result);
+        preparePieceDiceElements("2", result[1], result);
+        prepareActionsDiceElements();
+//        int nameNumber = 1;
+//        poobchis.play("P1", result,nameNumber); // TODO: nameNumber
+//        imageBoard.repaint();
+    }
+
+    public void preparePieceDiceElements(String dice, int result, int[] results){
+        Frame frame = new JFrame();
+        // Create the label
+        JLabel label = new JLabel("Which of the following pieces would you like to move " + result +" steps ?", JLabel.CENTER);
+        label.setBounds(0,0,380,95);
+
+        // Create the radio buttons
+        JRadioButton btn1 = new JRadioButton("Piece 1");
+        JRadioButton btn2 = new JRadioButton("Piece 2");
+        JRadioButton btn3 = new JRadioButton("Piece 3");
+        JRadioButton btn4 = new JRadioButton("Piece 4");
+
+        // Set the position of the radio buttons
+        btn1.setBounds(40,60,200,50);
+        btn2.setBounds(40,100,200,50);
+        btn3.setBounds(40,140,200,50);
+        btn4.setBounds(40,180,200,50);
+
+        // Add radio buttons to group
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(btn1);
+        bg.add(btn2);
+        bg.add(btn3);
+        bg.add(btn4);
+
+        JButton btn = new JButton("OK");
+        btn.setBounds(40,250,200,50);
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) { // TODO: Referencia del otro jugador
+                if(btn1.isSelected()){
+                    poobchis.play("P1", results,1,result); // TODO: metodo que retorne de quien es el turno, P1 o P2
+                }else if (btn2.isSelected()) {
+                    poobchis.play("P1", results,2,result);
+                }else if(btn3.isSelected()){
+                    poobchis.play("P1", results,3,result);
+                }else if(btn4.isSelected()){
+                    poobchis.play("P1", results,4,result);
+                }else{
+                    poobchis.play("P1", results,1,result);
+                }
+                frame.setVisible(false);
+                imageBoard.repaint();
+            }
+        });
+
+        // Add buttons to frame
+        frame.add(label);
+        frame.add(btn1);
+        frame.add(btn2);
+        frame.add(btn3);
+        frame.add(btn4);
+        frame.add(btn);
+
+        frame.setSize(400,400);
+        frame.setLayout(null);
+        frame.setVisible(true);
+    }
+
+    public void prepareActionsDiceElements(){
+        // TODO: Actions choose dice value
+    }
+
+    public void actionChoosePiece() {
+
     }
 
     public static void main(String[] args) {

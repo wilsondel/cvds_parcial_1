@@ -31,6 +31,14 @@ public class Box {
         return colorPiece;
     }
 
+    public int getPieceNumber(){
+        int numberPiece=0;
+        if( pieces.size()==1 ){
+            numberPiece = pieces.get(0).getNumberName();
+        }
+        return numberPiece;
+    }
+
     public ArrayList<Piece> getPieces() {
         return pieces;
     }
@@ -112,7 +120,7 @@ public class Box {
                 flag = false;
             }
         }
-
+//        if (pieceReference != null) pieceReference.setColor(Color.CYAN); // TODO: quitar esto
         return pieceReference;
     }
 

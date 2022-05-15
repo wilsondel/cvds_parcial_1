@@ -22,11 +22,11 @@ public class Poobchis {
         System.exit(0);
     }
 
-    public void play(String player, int[] result,int nameNumber){ // TODO: nameNumber
+    public void play(String player, int[] result,int nameNumber, int pieceMoveResult){ // TODO: nameNumber
 //        int[] result = p1.getRealValue();
 //        System.out.println("RESULT: " + result[0] + "," +result[1]);
-        board.evaluateBox(result,p1,1); //TODO: COLOCAR ARGUMENTO DE QUE FICHA VA A AVANZAR
-
+        board.evaluateBox(result,p1,nameNumber,pieceMoveResult); //TODO: COLOCAR ARGUMENTO DE QUE FICHA VA A AVANZAR
+//        board.evaluateBox(result,p1,2); //TODO: COLOCAR ARGUMENTO DE QUE FICHA VA A AVANZAR
 
     }
 

@@ -51,9 +51,9 @@ public class Board {
         baseP1 = new Safe();
         baseP2 = new Safe();
         int[] namesP1 = {1,2,3,4};
-        int[] namesP2 = {4,5,6,7};
+        int[] namesP2 = {5,6,7,8};
         initialBase(baseP1,redHome,namesP1);
-        initialBase(baseP2,blueHome,namesP2);
+        initialBase(baseP2,yellowHome,namesP2);
 
     }
 
@@ -116,7 +116,7 @@ public class Board {
             }
         }
         int[][] position = { {1,14},{1,18},{5,14},{5,18} };
-        addPiecesBase( position,yellowHome);
+        addPiecesBase( position,yellowHome, baseP2);
 
     }
 
@@ -151,12 +151,14 @@ public class Board {
             }
         }
         int[][] position = { {14,1},{14,5},{18,1},{18,5} };
-        addPiecesBase( position,redHome);
+        addPiecesBase( position,redHome,baseP1);
     }
 
-    private void addPiecesBase(int[][] position, Color colorPiece){
+    private void addPiecesBase(int[][] position, Color colorPiece, Box base){
+        int aux = 0;
         for (int[] pos : position){
-            completeMatrix[pos[0]][pos[1]].addPiece(new Piece(colorPiece));
+            completeMatrix[pos[0]][pos[1]].addPiece(base.getPieces().get(aux));
+            aux+=1;
         }
     }
 
@@ -204,12 +206,12 @@ public class Board {
     }
 
 
-    public void evaluateBox(int[] result, Player player,int numberName) {
+    public void evaluateBox(int[] result, Player player,int numberName, int pieceMoveResult) {
 //        mainBoxes
         // Base validation
         validateOutBase(result,player.getName());
         // Box validation
-        validateNormalBox(result[0],player.getName(),numberName); // TODO: cambiar valor por 1 solo dado :(
+        validateNormalBox(pieceMoveResult,player.getName(),numberName); // TODO: cambiar valor por 1 solo dado :(
     }
 
     public void validateOutBase(int[] result, String player){
@@ -221,30 +223,53 @@ public class Board {
     }
 
     public void outBase(int[] result, String player) {
+        System.out.println("BASE P1 REFERENCE: " + baseP1.getPieces().size()); //TODO: quitar
         int totalDiceSum = result[0] + result[1];
         if (player.equals("P1") || true) {
+
             if (result[0] == 5 && result[1] == 5) {
                 mainBoxes.get(0).addPiece(baseP1.outBase("1"));
             } else if (result[0] == 5 || result[1] == 5 || totalDiceSum == 5) {
                 mainBoxes.get(0).addPiece(baseP1.outBase("2"));
             }
+
             if (mainBoxes.get(0).getPieces().size()==1){
                 completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
                 completeMatrix[14][1].removePiece();
-//                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
+
             } else if ((mainBoxes.get(0).getPieces().size()==2)) {
                 completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
                 completeMatrix[14][1].removePiece();
                 completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
                 completeMatrix[14][5].removePiece();
+
+            }else if ((mainBoxes.get(0).getPieces().size()==3)) {
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
+                completeMatrix[14][1].removePiece();
+                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
+                completeMatrix[14][5].removePiece();
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(2));
+                completeMatrix[18][1].removePiece();
+
+            }else if ((mainBoxes.get(0).getPieces().size()==4)) {
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
+                completeMatrix[14][1].removePiece();
+                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
+                completeMatrix[14][5].removePiece();
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(2));
+                completeMatrix[18][1].removePiece();
+                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(3));
+                completeMatrix[18][5].removePiece();
+
             }
 
         }
     }
 
     public void validateNormalBox(int result, String player,int numberName) {
-        result=1; // TODO: quitar esto :(
+//        result=1; // TODO: quitar esto :(
         movePiece(result,player,numberName);
+        // TODO: validar carcel o bloqueo
     }
 
     public void movePiece(int result, String player,int numberName){
@@ -285,13 +310,33 @@ public class Board {
         System.out.println("RESULTADO DEL DADO: " + result);
         System.out.println("DESPUES CASILLA: " + getBoxReferencePosition()[totalMove][0][0] + "," + getBoxReferencePosition()[totalMove][0][1] );
         System.out.println("---------------------------------------------------------------");
-        // First Box
-        completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].addPiece(movePiece);
-        completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].removePiece(movePiece);
-        // Second Box
-        completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].addPiece(movePiece);
-        completeMatrix[getBoxReferencePosition()[referenceIndex][1][0]][getBoxReferencePosition()[referenceIndex][1][1]].removePiece(movePiece);
+//        boolean flag = completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[totalMove][0][1]].pieceReference(numberName) == movePiece;
 
+        boolean flagPath1 = completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].getState().equals("");
+        boolean flagPath2 = completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].getState().equals("");
+        boolean validatePieceMovement = false;
+        if (flagPath1) {
+            completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].addPiece(movePiece);
+            validatePieceMovement = true;
+        } else if (flagPath2){
+            completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].addPiece(movePiece);
+            validatePieceMovement = true;
+        }
+        if (validatePieceMovement) {
+            completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].removePiece(movePiece);
+            completeMatrix[getBoxReferencePosition()[referenceIndex][1][0]][getBoxReferencePosition()[referenceIndex][1][1]].removePiece(movePiece);
+        }
+
+
+        // First Box
+//        if (completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].getState().equals("1")) {
+//            completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].addPiece(movePiece);
+//            completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].removePiece(movePiece);
+//        } if (completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].getState().equals("1")) {
+//        // Second Box
+//            completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].addPiece(movePiece);
+//            completeMatrix[getBoxReferencePosition()[referenceIndex][1][0]][getBoxReferencePosition()[referenceIndex][1][1]].removePiece(movePiece);
+//        }
 
 //        System.out.println("LONGITUD: " + getBoxReferencePosition().length);
     }
