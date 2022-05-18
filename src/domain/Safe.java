@@ -16,6 +16,7 @@ public class Safe extends Box{
         ArrayList<Integer> numberNames = super.lookPieces();
         int pieceNum1,pieceNum2;
         if (caseDice.equals("1")) {
+            System.out.println("Entra en caso 1");
             if (numberNames.size() >= 2) {
                 numberNames.stream().sorted();
                 pieceNum1 = numberNames.get(0);
@@ -27,6 +28,7 @@ public class Safe extends Box{
                 return pieces;
             }
         } else if (caseDice.equals("2")) {
+            System.out.println("Entra en caso 2");
             if (numberNames.size() >= 1) {
                 numberNames.stream().sorted();
                 pieceNum1 = numberNames.get(0);

@@ -7,7 +7,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.util.Scanner; //TODO: ojito => 0v0
 
 public class PoobchisGUI extends JFrame {
 
@@ -599,7 +598,7 @@ public class PoobchisGUI extends JFrame {
 //        preparePieceDiceElements("2", result[1], result);
 //        prepareActionsDiceElements();
         int nameNumber = 1;
-        poobchis.play("P2", result,nameNumber,1); // TODO: validar turnos
+        poobchis.play("P1", result,nameNumber,1); // TODO: validar turnos
         imageBoard.repaint();
     }
 
