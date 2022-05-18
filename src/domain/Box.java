@@ -43,6 +43,7 @@ public class Box {
         return pieces;
     }
 
+
     public Color getColor() {
         return color;
     }

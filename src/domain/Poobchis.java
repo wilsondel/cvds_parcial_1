@@ -1,6 +1,8 @@
 package domain;
 
-public class Poobchis {
+import java.io.Serializable;
+
+public class Poobchis implements Serializable {
     private Board board;
     private Player p1, p2;
 
@@ -22,11 +24,13 @@ public class Poobchis {
         System.exit(0);
     }
 
-    public void play(String player, int[] result,int nameNumber, int pieceMoveResult){ // TODO: nameNumber
+    public void play(String player, int[] result,int nameNumber, int pieceMoveResult){
 //        int[] result = p1.getRealValue();
-//        System.out.println("RESULT: " + result[0] + "," +result[1]);
-        board.evaluateBox(result,p1,nameNumber,pieceMoveResult); //TODO: COLOCAR ARGUMENTO DE QUE FICHA VA A AVANZAR
-//        board.evaluateBox(result,p1,2); //TODO: COLOCAR ARGUMENTO DE QUE FICHA VA A AVANZAR
+        if (player.equals("P1")) {
+            board.evaluateBox(result,p1,nameNumber,pieceMoveResult);
+        } else {
+            board.evaluateBox(result,p2,nameNumber,pieceMoveResult);
+        }
 
     }
 

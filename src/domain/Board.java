@@ -1,20 +1,18 @@
 package domain;
 
-import com.sun.xml.internal.ws.model.wsdl.WSDLOutputImpl;
 
 import java.awt.*;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Board {
+
     // Boxes
     private Box[] boxes;
     private Safe[] safes;
     private HomeWay[] homeWays;
     private Success[] successes;
 
-    //
+    // Main Matrix
     private Box[][] completeMatrix;
 
     // COLORS
@@ -28,9 +26,7 @@ public class Board {
     private ArrayList<Box> mainBoxes;
     private Safe baseP1;
     private Safe baseP2;
-
-    // Boxes position domain
-    //private int[][][] boxesPosition;
+    private ArrayList<HomeWay> homeWayP1;
 
 
     public Board(){
@@ -50,13 +46,19 @@ public class Board {
         }
         baseP1 = new Safe();
         baseP2 = new Safe();
+        homeWayP1 = new  ArrayList<HomeWay>(6);
+        for (int i = 0; i < 6;i++){
+            homeWayP1.add(new HomeWay());
+        }
         int[] namesP1 = {1,2,3,4};
         int[] namesP2 = {5,6,7,8};
         initialBase(baseP1,redHome,namesP1);
         initialBase(baseP2,yellowHome,namesP2);
-
     }
 
+    /*
+     * Initialize bases of the board
+     */
     public void initialBase(Safe base, Color color, int[] names) {
         base.addPiece(new Piece(color,names[0]));
         base.addPiece(new Piece(color,names[1]));
@@ -69,22 +71,20 @@ public class Board {
         return completeMatrix;
     }
 
+
     public Box[][] buildMatrix() {
-//        for (int i = 0; i < 20; i++){
-//            for (int j = 0; j<20;i++){
-//                completeMatrix[i][j] = new Box();
-//            }
-//        }
         blueBase(blueHome);
         yellowBase(yellowHome);
         greenBase(greenHome);
         redBase(redHome);
         safeBox(grayBox);
         successBox(grayBox);
-
         return completeMatrix;
     }
 
+    /*
+      * Show blue base
+     */
     private void blueBase(Color colorBox){
         for (int i = 0; i < 7; i++){
             for (int j = 0; j<7;j++){
@@ -100,7 +100,9 @@ public class Board {
         }
 
     }
-
+    /*
+     * Show yellow base
+     */
     private void yellowBase(Color colorBox){
         for (int i = 0; i <7; i++){
             for (int j = 13; j<20;j++){
@@ -119,7 +121,9 @@ public class Board {
         addPiecesBase( position,yellowHome, baseP2);
 
     }
-
+    /*
+     *  Show green base
+     */
     private void greenBase(Color colorBox){
         for (int i = 13; i <20; i++){
             for (int j = 13; j<20;j++){
@@ -136,6 +140,9 @@ public class Board {
         }
 
     }
+    /*
+     * Show red base
+     */
     private void redBase(Color colorBox){
         for (int i = 13; i <20; i++){
             for (int j = 0; j<7;j++){
@@ -153,7 +160,9 @@ public class Board {
         int[][] position = { {14,1},{14,5},{18,1},{18,5} };
         addPiecesBase( position,redHome,baseP1);
     }
-
+    /*
+     *
+     */
     private void addPiecesBase(int[][] position, Color colorPiece, Box base){
         int aux = 0;
         for (int[] pos : position){
@@ -211,7 +220,7 @@ public class Board {
         // Base validation
         validateOutBase(result,player.getName());
         // Box validation
-        validateNormalBox(pieceMoveResult,player.getName(),numberName); // TODO: cambiar valor por 1 solo dado :(
+        validateNormalBox(pieceMoveResult,player.getName(),numberName);
     }
 
     public void validateOutBase(int[] result, String player){
@@ -223,7 +232,7 @@ public class Board {
     }
 
     public void outBase(int[] result, String player) {
-        System.out.println("BASE P1 REFERENCE: " + baseP1.getPieces().size()); //TODO: quitar
+        //System.out.println("BASE P1 REFERENCE: " + baseP1.getPieces().size()); //TODO: quitar
         int totalDiceSum = result[0] + result[1];
         if (player.equals("P1") || true) {
 
@@ -233,41 +242,43 @@ public class Board {
                 mainBoxes.get(0).addPiece(baseP1.outBase("2"));
             }
 
-            if (mainBoxes.get(0).getPieces().size()==1){
-                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
+            // Piece 1 base
+            if (mainBoxes.get(0).lookPieces().contains(1)){
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).pieceReference(1));
                 completeMatrix[14][1].removePiece();
-
-            } else if ((mainBoxes.get(0).getPieces().size()==2)) {
-                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
-                completeMatrix[14][1].removePiece();
-                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
-                completeMatrix[14][5].removePiece();
-
-            }else if ((mainBoxes.get(0).getPieces().size()==3)) {
-                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
-                completeMatrix[14][1].removePiece();
-                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
-                completeMatrix[14][5].removePiece();
-                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(2));
-                completeMatrix[18][1].removePiece();
-
-            }else if ((mainBoxes.get(0).getPieces().size()==4)) {
-                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(0));
-                completeMatrix[14][1].removePiece();
-                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(1));
-                completeMatrix[14][5].removePiece();
-                completeMatrix[11][4].addPiece(mainBoxes.get(0).getPieces().get(2));
-                completeMatrix[18][1].removePiece();
-                completeMatrix[12][4].addPiece(mainBoxes.get(0).getPieces().get(3));
-                completeMatrix[18][5].removePiece();
-
             }
 
+            // Piece 2 base
+            if ((mainBoxes.get(0).lookPieces().contains(2))) {
+                completeMatrix[12][4].addPiece(mainBoxes.get(0).pieceReference(2));
+                completeMatrix[14][5].removePiece();
+            }
+
+            // Piece 3 base
+            if ((mainBoxes.get(0).lookPieces().contains(3))) {
+                completeMatrix[11][4].addPiece(mainBoxes.get(0).pieceReference(3));
+                completeMatrix[18][1].removePiece();
+            }
+
+            // Piece 4 base
+            if ((mainBoxes.get(0).lookPieces().contains(4))) {
+                completeMatrix[12][4].addPiece(mainBoxes.get(0).pieceReference(4));
+                completeMatrix[18][5].removePiece();
+            }
+            // Quit pieces with 0 Num TODO: resolver esto :d
+            quitExtraPieces(0);
+        }
+    }
+    public void quitExtraPieces(int numPiece) {
+        for(int i = 0; i < completeMatrix.length;i++){
+            for(int j = 0; j < completeMatrix.length;j++){
+                completeMatrix[i][j].removePiece(completeMatrix[i][j].pieceReference(numPiece));
+            }
         }
     }
 
     public void validateNormalBox(int result, String player,int numberName) {
-//        result=1; // TODO: quitar esto :(
+//        result=1; // TODO: quitar esto
         movePiece(result,player,numberName);
         // TODO: validar carcel o bloqueo
     }
@@ -283,20 +294,83 @@ public class Board {
                 flag = false;
             }
         }
+
         // get the reference of the piece
         Piece movePiece = mainBoxes.get(referenceIndex).pieceReference(numberName);
+
         // remove the piece using the reference
         mainBoxes.get(referenceIndex).removePiece(movePiece);
+
+//        System.out.println("REFERENCE + RESULT: " + referenceIndex + "," + result);
+
+        if ((referenceIndex + result) > 62){
+            movePiece.setState("homeWay");
+            homeWayP1.get(result-1).addPiece(movePiece);
+            refreshCompleteMatrixHomeWay(result,numberName,referenceIndex, movePiece,"red");
+        }
+
+        boolean flagHomeWay= homeWayContains(homeWayP1,numberName);
+
+        if (flagHomeWay) {
+            removeInMainBoxes(numberName);
+            quitExtraPieces(numberName);
+            referenceIndex = homeWayReferenceIndex(homeWayP1,numberName);
+            movePiece = homeWayP1.get(referenceIndex).pieceReference(numberName);
+            homeWayP1.get(referenceIndex).removePiece(movePiece);
+            homeWayP1.get(referenceIndex + result).addPiece(movePiece);
+            refreshCompleteMatrixHomeWay(result + referenceIndex,numberName,referenceIndex, movePiece,"red");
+        }
+
 //        System.out.println("REFERENCE INDEX IS: " + referenceIndex);
+//        if (movePiece.getPower().equals("Advantageous")) {
+//            result+=3; // TODO: validar turno
+//        }
 
         // move the piece
         if ((referenceIndex + result) >= 68) referenceIndex = 0; // TODO: REPOSICION DE ELEMENTO IRIA DESDE EL INICIO
-        //Update the matrix
-        refreshCompleteMatrix(result,numberName,referenceIndex, movePiece);
-        referenceIndex += result;
-        // add the piece using the reference
-        mainBoxes.get(referenceIndex).addPiece(movePiece);
 
+//        Piece p1PieceHomeWay = null;
+        if (!flagHomeWay) {
+            //Update the matrix
+            refreshCompleteMatrix(result,numberName,referenceIndex, movePiece);
+            referenceIndex += result;
+            // add the piece using the reference
+            mainBoxes.get(referenceIndex).addPiece(movePiece);
+        }
+
+    }
+
+    public int homeWayReferenceIndex(ArrayList<HomeWay> homeWay, int numPiece){
+        ArrayList<Integer> piecesNum;
+        for (int i = 0; i < homeWay.size(); i++) {
+            piecesNum= homeWay.get(i).lookPieces();
+            if (piecesNum.contains(numPiece)){
+                System.out.println("Si encuentra la ficha en homeway");
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public boolean homeWayContains(ArrayList<HomeWay> homeWay, int numPiece){
+        ArrayList<Integer> piecesNum;
+        for (Box p : homeWay) {
+            piecesNum= p.lookPieces();
+            if (piecesNum.contains(numPiece)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeInMainBoxes(int numPiece) {
+        ArrayList<Integer> piecesNum;
+        for (Box p : mainBoxes) {
+            piecesNum= p.lookPieces();
+            if (piecesNum.contains(numPiece)){
+                p.removePiece(p.pieceReference(numPiece));
+            }
+        }
     }
 
     public void refreshCompleteMatrix(int result,int numberName, int referenceIndex, Piece movePiece) {
@@ -304,12 +378,12 @@ public class Board {
 //        System.out.println("REFERENCE INDEX IS: " + referenceIndex);
         int totalMove = referenceIndex + result;
 //        mainBoxes;
-        System.out.println("---------------------------------------------------------------");
-        System.out.println("REFERENCE INDEX IS: " + referenceIndex + " RESULT: " + result);
-        System.out.println("ANTES CASILLA: " + getBoxReferencePosition()[referenceIndex][0][0] + "," + getBoxReferencePosition()[referenceIndex][0][1] );
-        System.out.println("RESULTADO DEL DADO: " + result);
-        System.out.println("DESPUES CASILLA: " + getBoxReferencePosition()[totalMove][0][0] + "," + getBoxReferencePosition()[totalMove][0][1] );
-        System.out.println("---------------------------------------------------------------");
+//        System.out.println("---------------------------------------------------------------");
+//        System.out.println("REFERENCE INDEX IS: " + referenceIndex + " RESULT: " + result);
+//        System.out.println("ANTES CASILLA: " + getBoxReferencePosition()[referenceIndex][0][0] + "," + getBoxReferencePosition()[referenceIndex][0][1] );
+//        System.out.println("RESULTADO DEL DADO: " + result);
+//        System.out.println("DESPUES CASILLA: " + getBoxReferencePosition()[totalMove][0][0] + "," + getBoxReferencePosition()[totalMove][0][1] );
+//        System.out.println("---------------------------------------------------------------");
 //        boolean flag = completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[totalMove][0][1]].pieceReference(numberName) == movePiece;
 
         boolean flagPath1 = completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].getState().equals("");
@@ -327,21 +401,9 @@ public class Board {
             completeMatrix[getBoxReferencePosition()[referenceIndex][1][0]][getBoxReferencePosition()[referenceIndex][1][1]].removePiece(movePiece);
         }
 
-
-        // First Box
-//        if (completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].getState().equals("1")) {
-//            completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].addPiece(movePiece);
-//            completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].removePiece(movePiece);
-//        } if (completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[referenceIndex][0][1]].getState().equals("1")) {
-//        // Second Box
-//            completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].addPiece(movePiece);
-//            completeMatrix[getBoxReferencePosition()[referenceIndex][1][0]][getBoxReferencePosition()[referenceIndex][1][1]].removePiece(movePiece);
-//        }
-
-//        System.out.println("LONGITUD: " + getBoxReferencePosition().length);
     }
 
-
+    //
     public int[][][] getBoxReferencePosition(){
         int[][][] boxesPosition = {
 
@@ -369,7 +431,53 @@ public class Board {
         return boxesPosition;
     }
 
+    public int[][][] getBoxReferencePositionHomeWay(String baseHomeWay){
+        int[][][] boxesPositionHomeWay = {};
+        if (baseHomeWay.equals("red")) {
+            int[][][] boxesPositionRedHomeWay = {
+                    //Red
+                    {{9,1},{10,1}},{{9,2},{10,2}},{{9,3},{10,3}},{{9,4},{10,4}},{{9,5},{10,5}},{{9,6},{10,6}}
+             };
+            return  boxesPositionRedHomeWay;
 
-    public void refresh() {}
+        } else if (baseHomeWay.equals("yellow")) {
+            int[][][] boxesPositionYellowHomeWay = {
+                    //Yellow
+                    {{9,19},{10,19}},{{9,18},{10,18}},{{9,17},{10,17}},{{9,16},{10,16}},{{9,15},{10,15}},{{9,14},{10,14}}
+            };
+            return boxesPositionYellowHomeWay;
+        }
+
+        return boxesPositionHomeWay;
+    }
+    /*
+     *
+     */
+    public void refreshCompleteMatrixHomeWay(int result,int numberName, int referenceIndex, Piece movePiece, String colorBase) {
+        boolean flagPath1 = completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][0][0]][getBoxReferencePositionHomeWay(colorBase)[result][0][1]].getState().equals("");
+        boolean flagPath2 = completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][1][0]][getBoxReferencePositionHomeWay(colorBase)[result][1][1]].getState().equals("");
+        boolean validatePieceMovement = false;
+        System.out.println("********************************************************");
+        System.out.println("REFERENCE INDEX IS: " + referenceIndex + " RESULT: " + result);
+        System.out.println("CASILLA A PARAR (1): " + getBoxReferencePositionHomeWay(colorBase)[result][0][0] + "," + getBoxReferencePositionHomeWay(colorBase)[result][0][1] );
+        System.out.println("RESULTADO DEL DADO: " + result);
+        System.out.println("CASILLA A PARAR: " + getBoxReferencePositionHomeWay(colorBase)[result][1][0] + "," + getBoxReferencePositionHomeWay(colorBase)[result][1][1] );
+        System.out.println("********************************************************");
+        if (flagPath1) {
+            completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][0][0]][getBoxReferencePositionHomeWay(colorBase)[result][0][1]].addPiece(movePiece);
+            validatePieceMovement = true;
+        } else if (flagPath2){
+            completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][1][0]][getBoxReferencePositionHomeWay(colorBase)[result][1][1]].addPiece(movePiece);
+            validatePieceMovement = true;
+        }
+//        if (validatePieceMovement) {
+//            completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][0][0]][getBoxReferencePositionHomeWay(colorBase)[result][0][1]].removePiece(movePiece);
+//            completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][1][0]][getBoxReferencePositionHomeWay(colorBase)[result][1][1]].removePiece(movePiece);
+//        }
+    }
+
+
+
+public void refresh() {}
 
 }

@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Scanner; //TODO: ojito => 0v0
 
 public class PoobchisGUI extends JFrame {
@@ -13,25 +14,20 @@ public class PoobchisGUI extends JFrame {
     private static final Dimension PREFERRED_DIMENSION = new Dimension(1200,1000);
     // GUI
     private static PoobchisGUI guiAux;
-    // POObchis
+    // Poobchis
     Poobchis poobchis;
     int optPlayers=2;
-
     // Menu
     private JMenuBar navbar;
     private JMenuItem menu,newGame,open,save,saveAs,out,menuColor,menuColorP1,menuColorP2;
-
     // Home
     private JPanel home,boardBackground,settings;
-
     // Home Buttons
     private JButton buttonStart,buttonRules, buttonExit;
-
     // Choose modes
     private JPanel chooseModes;
     // Buttons
     private JButton buttonMode1,buttonMode2;
-
     // // Mode 1
     private JPanel mode1;
     private JButton powerP1,colorP1,diceStyleP1, playMode1;
@@ -39,11 +35,9 @@ public class PoobchisGUI extends JFrame {
     private JButton buttonOk = new JButton("Ok");
     // // JDialog checkboxes powers text
     ArrayList<String> powers = new ArrayList<String>();
-
     //// player amount
     private JDialog playerAmount;
     private ArrayList<JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
-
     // Board
     private BoardView imageBoard;
     // Board Buttons
@@ -55,15 +49,13 @@ public class PoobchisGUI extends JFrame {
     public static final int SIZE=20;
     public static final int LENGTH=20;
 
-
     /*Panel buttonAdd*/
     private JTextField textCode;
     private JTextField textName;
     private JTextField textCredits;
     private JTextArea textResults;
 
-    private PoobchisGUI()
-    {
+    private PoobchisGUI() {
         poobchis = new Poobchis();
         prepareElements();
         prepareActions();
@@ -121,7 +113,6 @@ public class PoobchisGUI extends JFrame {
 
 
     private void prepareElementsBoard() {
-//        System.out.println("ELEMENTS BOARD");
         boardBackground = new JPanel();
         boardBackground.setLayout(new BorderLayout(Toolkit.getDefaultToolkit().getScreenSize().width/50, 5));
         add(boardBackground);
@@ -336,14 +327,30 @@ public class PoobchisGUI extends JFrame {
                 actionSave();
             }
         });
+        // New option
+        newGame.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                actionNewPoobchis();
+            }
+        });
 
+
+    }
+    private void actionNewPoobchis(){
+        PoobchisGUI poobchisito =new PoobchisGUI();
+        poobchisito.setVisible(true);
     }
 
     private void actionOpen(){
-        JFileChooser fileChooser = new JFileChooser();
-        int returnValue = fileChooser.showOpenDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION){
-            JOptionPane.showMessageDialog(this, "We are working in this functionality. We cannot open " + fileChooser.getSelectedFile().getName());
+        try {
+            JFileChooser filepath = new JFileChooser();
+            filepath.setFileFilter(new FileNameExtensionFilter(null, "dat"));
+            filepath.showDialog(null, "Open file");
+            filepath.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            poobchis = MenuOptions.getMenuOptions().open(filepath.getSelectedFile());
+            imageBoard.repaint();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
 
@@ -515,10 +522,14 @@ public class PoobchisGUI extends JFrame {
 
 
     private void actionSave() {
-        JFileChooser fileChooser = new JFileChooser();
-        int returnValue = fileChooser.showSaveDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION){
-            JOptionPane.showMessageDialog(this, "We are working in this functionality. We cannot save " + fileChooser.getSelectedFile().getName());
+        try {
+            JFileChooser filepath = new JFileChooser();
+            filepath.setFileFilter(new FileNameExtensionFilter(null, "dat"));
+            filepath.showDialog(null, "Save");
+            filepath.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            MenuOptions.getMenuOptions().save(filepath.getSelectedFile(), poobchis);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
 
@@ -581,20 +592,15 @@ public class PoobchisGUI extends JFrame {
 
 
     private void actionRollDice() {
-//        Player player1 = new Player("P1");
         int[] result = poobchis.getP1().getValueDice();
         dice1.setText(String.valueOf(result[0]));
         dice2.setText(String.valueOf(result[1]));
-//        int[] resultQUITAR = {5,5}; // TODO: quitar esto
-//        Scanner myObj = new Scanner(System.in);
-//        int name = Integer.parseInt(myObj.nextLine());
-
-        preparePieceDiceElements("1",result[0], result);
-        preparePieceDiceElements("2", result[1], result);
-        prepareActionsDiceElements();
-//        int nameNumber = 1;
-//        poobchis.play("P1", result,nameNumber); // TODO: nameNumber
-//        imageBoard.repaint();
+//        preparePieceDiceElements("1",result[0], result);
+//        preparePieceDiceElements("2", result[1], result);
+//        prepareActionsDiceElements();
+        int nameNumber = 1;
+        poobchis.play("P2", result,nameNumber,1); // TODO: validar turnos
+        imageBoard.repaint();
     }
 
     public void preparePieceDiceElements(String dice, int result, int[] results){
