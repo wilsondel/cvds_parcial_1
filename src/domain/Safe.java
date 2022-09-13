@@ -12,11 +12,15 @@ public class Safe extends Box{
     }
 
 
+    /**
+     * @param caseDice - 1 if dice values are 5 and 5 | 2 if there is a 5 value
+     * @return piece reference that will be out of base
+     */
     public Piece[] outBase(String caseDice){
         ArrayList<Integer> numberNames = super.lookPieces();
         int pieceNum1,pieceNum2;
         if (caseDice.equals("1")) {
-            System.out.println("Entra en caso 1");
+//            System.out.println("Entra en caso 1");
             if (numberNames.size() >= 2) {
                 numberNames.stream().sorted();
                 pieceNum1 = numberNames.get(0);
@@ -28,7 +32,7 @@ public class Safe extends Box{
                 return pieces;
             }
         } else if (caseDice.equals("2")) {
-            System.out.println("Entra en caso 2");
+//            System.out.println("Entra en caso 2");
             if (numberNames.size() >= 1) {
                 numberNames.stream().sorted();
                 pieceNum1 = numberNames.get(0);

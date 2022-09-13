@@ -12,7 +12,7 @@ public class Piece {
     private ImageIcon image;
 
     private int numberName;
-    private String power = ""; // TODO: setear poder desde presentacion
+    private String power = "Normal";
 
     public Color getColor() {
         return color;
@@ -46,8 +46,8 @@ public class Piece {
 
     }
 
-    public void move (int value){
-
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public int getPosition(){

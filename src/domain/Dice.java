@@ -1,5 +1,8 @@
 package domain;
 
+/**
+ *
+ */
 public class Dice {
     private int value;
     private String imageLocation;
@@ -17,6 +20,9 @@ public class Dice {
         imageLocation="images/dices/design.png";
     }
 
+    /**
+     * @return random int value
+     */
     public int rollDice(){
         int randomNum = 1 + (int)(Math.random() * ((6 - 1) + 1));
         value = randomNum;

@@ -74,6 +74,9 @@ public class Box {
 
     public void eat(){}
 
+    /**
+     * @param piece - piece that will be saved in the box
+     */
     public void addPiece(Piece piece){
         if (piece != null) {
             pieces.add(piece);
@@ -81,29 +84,48 @@ public class Box {
         }
     }
 
+    /**
+     * @param piece - pieces that will be saved in the box
+     */
     public void addPiece(Piece[] piece){
-        for (Piece p : piece) {
-            addPiece(p);
+        try {
+            for (Piece p : piece) {
+                addPiece(p);
+            }
+            refreshState();
+        } catch (Exception e) {
+            System.out.println(" " + e.getMessage());
         }
-        refreshState();
-
     }
 
+    /**
+     * @param piece - piece that will be remove
+     */
     public void removePiece(Piece piece){
         pieces.remove(piece);
         refreshState();
     }
 
+    /**
+     * remove all pieces
+     */
     public void removePiece(){
         pieces.clear();
         refreshState();
     }
 
+    /**
+     * refresh the state of the box - "" for empty - "1" for busy
+     */
     public void refreshState() {
         if (pieces.size()==0) state = "";
         else if (pieces.size() > 0) state = "1";
     }
 
+    /**
+    * Look for the pieces that the box contains
+    * @return numberNames - containing number names of the pieces
+     */
     public ArrayList<Integer> lookPieces() {
         ArrayList<Integer> numberNames = new ArrayList<Integer>();
         for (Piece p : pieces) {
@@ -112,6 +134,11 @@ public class Box {
         return numberNames;
     }
 
+    /**
+    * Return the reference of the piece in the list of pieces
+    * @param numberName - number of the piece
+    * @return piece reference
+     */
     public Piece pieceReference(int numberName) {
         boolean flag = true;
         Piece pieceReference = null;
@@ -121,8 +148,9 @@ public class Box {
                 flag = false;
             }
         }
-//        if (pieceReference != null) pieceReference.setColor(Color.CYAN); // TODO: quitar esto
         return pieceReference;
     }
+
+    public String getWildcard() {return "";}
 
 }

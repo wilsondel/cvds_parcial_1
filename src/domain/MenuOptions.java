@@ -12,6 +12,11 @@ public class MenuOptions {
         return options;
     }
 
+    /**
+     * @param file - file to open
+     * @return poobchis object with state information
+     * @throws PoobchisException
+     */
     public Poobchis open(File file) throws PoobchisException {
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
@@ -34,6 +39,11 @@ public class MenuOptions {
         }
     }
 
+    /**
+     * @param file -  file to read
+     * @param automata - object to save
+     * @throws PoobchisException
+     */
     public void save(File file, Poobchis automata) throws PoobchisException  {
         ObjectOutputStream salida = null;
         FileOutputStream fos = null;

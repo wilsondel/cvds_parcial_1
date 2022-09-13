@@ -1,9 +1,14 @@
 package domain;
 
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+
+/**
+ *
+ */
 public class Board {
 
     // Boxes
@@ -21,6 +26,7 @@ public class Board {
     private Color greenHome = new Color(0xBF81F141,true);
     private Color yellowHome = new Color(0xBFF9A72B,true);
     private Color grayBox = new Color(0xBF66635B,true);
+    private Color jokerBox = new Color(0xFF8C52FF,true);
 
     // List boxes
     private ArrayList<Box> mainBoxes;
@@ -29,12 +35,16 @@ public class Board {
     private ArrayList<HomeWay> homeWayP1;
     private ArrayList<HomeWay> homeWayP2;
 
+    //Success
+    private Success successPieces;
+
 
     public Board(){
         boxes = new Box[56];
         safes = new Safe[12];
         homeWays = new HomeWay[28];
         successes = new Success[4];
+        successPieces = new Success();
         completeMatrix = new Box[20][20];
         for(int i = 0; i < completeMatrix.length;i++){
             for(int j = 0; j < completeMatrix.length;j++){
@@ -59,9 +69,36 @@ public class Board {
         int[] namesP2 = {5,6,7,8};
         initialBase(baseP1,redHome,namesP1);
         initialBase(baseP2,yellowHome,namesP2);
+        initializeJokerCompleteMatrix();
+        initializeJokerMainBoxes();
     }
 
-    /*
+    public Success getSuccessPieces() {
+        return successPieces;
+    }
+
+    /**
+     * Get Base of the player 1
+     */
+    public Safe getBaseP1() {
+        return baseP1;
+    }
+    /**
+     * Get Base of the player 2
+     */
+    public Safe getBaseP2() {
+        return baseP2;
+    }
+
+    public ArrayList<HomeWay> getHomeWayP1() {
+        return homeWayP1;
+    }
+
+    public ArrayList<HomeWay> getHomeWayP2() {
+        return homeWayP2;
+    }
+
+    /**
      * Initialize bases of the board
      * @param base
      * @param color
@@ -74,11 +111,37 @@ public class Board {
         base.addPiece(new Piece(color,names[3]));
     }
 
+    /**
+     * Initialize joker boxes in the presentation matrix
+     */
+    public void initializeJokerCompleteMatrix(){
+        int[][] pos1= getBoxReferencePosition()[9];
+        int[][] pos2= getBoxReferencePosition()[26];
+        int[][] pos3= getBoxReferencePosition()[45];
+        completeMatrix[pos1[0][0]][pos1[0][1]] = new Joker(jokerBox);
+        completeMatrix[pos1[1][0]][pos1[1][1]] = new Joker(jokerBox);
+        completeMatrix[pos2[0][0]][pos2[0][1]] = new Joker(jokerBox);
+        completeMatrix[pos2[1][0]][pos2[1][1]] = new Joker(jokerBox);
+        completeMatrix[pos3[0][0]][pos3[0][1]] = new Joker(jokerBox);
+        completeMatrix[pos3[1][0]][pos3[1][1]] = new Joker(jokerBox);
+    }
+
+    /**
+     * Set the joker boxes
+     */
+    public void initializeJokerMainBoxes(){
+        mainBoxes.set(9,new Joker(jokerBox));
+        mainBoxes.set(26,new Joker(jokerBox));
+        mainBoxes.set(45,new Joker(jokerBox));
+    }
 
     public Box[][] getCompleteMatrix() {
         return completeMatrix;
     }
 
+    /**
+     * @return Box[][] containing the matrix with all the base elements
+     */
     public Box[][] buildMatrix() {
         blueBase(blueHome);
         yellowBase(yellowHome);
@@ -89,7 +152,7 @@ public class Board {
         return completeMatrix;
     }
 
-    /*
+    /**
       * Show blue base
      */
     private void blueBase(Color colorBox){
@@ -106,7 +169,7 @@ public class Board {
             }
         }
     }
-    /*
+    /**
      * Show yellow base
      */
     private void yellowBase(Color colorBox){
@@ -127,7 +190,7 @@ public class Board {
         addPiecesBase( position,yellowHome, baseP2);
     }
 
-    /*
+    /**
      *  Show green base
      */
     private void greenBase(Color colorBox){
@@ -146,7 +209,7 @@ public class Board {
         }
     }
 
-    /*
+    /**
      * Show red base
      */
     private void redBase(Color colorBox){
@@ -167,7 +230,7 @@ public class Board {
         addPiecesBase( position,redHome,baseP1);
     }
 
-    /*
+    /**
      * Add Pieces in the base
      */
     private void addPiecesBase(int[][] position, Color colorPiece, Box base){
@@ -177,7 +240,7 @@ public class Board {
             aux+=1;
         }
     }
-    /*
+    /**
     * Add the safe Boxes to the Board
     */
     private void safeBox(Color colorBox){
@@ -198,7 +261,7 @@ public class Board {
         completeMatrix[7][4] = new Safe(colorBox);
         completeMatrix[8][4] = new Safe(colorBox);
     }
-    /*
+    /**
      * Add the success Boxes to the Board
      */
     private void successBox(Color colorBox){
@@ -226,6 +289,12 @@ public class Board {
     }
 
 
+    /**
+     * @param result dice values
+     * @param player player playing in turn
+     * @param numberName number of the piece to move
+     * @param pieceMoveResult number of boxes to move numberName
+     */
     public void evaluateBox(int[] result, Player player,int numberName, int pieceMoveResult) {
 
         // Base validation
@@ -234,6 +303,10 @@ public class Board {
         validateNormalBox(pieceMoveResult,player.getName(),numberName);
     }
 
+    /**
+     * @param result dice values
+     * @param player player playing in turn
+     */
     public void validateOutBase(int[] result, String player){
         int amountPieces;
         int[][] baseRedPosition = { {11,4},{14,1},{12,4},{14,5},{11,4},{18,1},{12,4},{18,5} };
@@ -248,11 +321,14 @@ public class Board {
             if (amountPieces > 0) outBase(result,player,baseYellowPosition,nameYellowPieces);
         }
     }
-    /*
-     *
+
+    /**
+     * @param result dice values
+     * @param player player playing in turn
+     * @param basePosition base of the player => baseP1 or baseP2
+     * @param namePieces position of pieces in presentation matrix
      */
     public void outBase(int[] result, String player,int[][] basePosition, int[] namePieces) {
-        //System.out.println("BASE P1 REFERENCE: " + baseP1.getPieces().size()); //TODO: quitar
         int totalDiceSum = result[0] + result[1];
         int initialPos = 0;
         if (player.equals("P1")) {
@@ -289,11 +365,14 @@ public class Board {
             completeMatrix[basePosition[6][0]][basePosition[6][1]].addPiece(mainBoxes.get(initialPos).pieceReference(namePieces[3]));
             completeMatrix[basePosition[7][0]][basePosition[7][1]].removePiece();
         }
-        // Quit pieces with 0 Num TODO: resolver esto :d, aiññsh => NO :p
         quitExtraPieces(0);
     }
 
-    public void quitExtraPieces(int numPiece) {
+
+    /**
+     * @param numPiece name of the piece to delete
+     */
+    private void quitExtraPieces(int numPiece) {
         for(int i = 0; i < completeMatrix.length;i++){
             for(int j = 0; j < completeMatrix.length;j++){
                 completeMatrix[i][j].removePiece(completeMatrix[i][j].pieceReference(numPiece));
@@ -301,22 +380,22 @@ public class Board {
         }
     }
 
+    /**
+     * @param result number of boxes to move numberName
+     * @param player player playing in turn
+     * @param numberName  position of pieces in presentation matrix
+     */
     public void validateNormalBox(int result, String player,int numberName) {
-//        result=1; // TODO: quitar esto :l
         movePiece(result,player,numberName);
-        // TODO: validar carcel o bloqueo
     }
 
-    /*
-     *
+    /**
+     * Move the piece reference of the player.
+     * @param result - value of the dice
+     * @param player - P1 or P2
+     * @param numberName - Number of the piece to move
      */
     public void movePiece(int result, String player,int numberName){
-//        ArrayList<HomeWay> homeWayP;
-//        if (player.equals("P1")) {
-//            homeWayP =  homeWayP1;
-//        } else {
-//            homeWayP =  homeWayP2;
-//        }
         int referenceIndex = 0;
         // Locate piece
         for (int i = 0 ; i < mainBoxes.size() ; i++) {
@@ -329,54 +408,154 @@ public class Board {
         Piece movePiece = mainBoxes.get(referenceIndex).pieceReference(numberName);
         // remove the piece using the reference
         mainBoxes.get(referenceIndex).removePiece(movePiece);
-//        System.out.println("REFERENCE + RESULT: " + referenceIndex + "," + result);
-//        if (player.equals("P1")) {
-//            movePieceHomeWay(homeWayP1,movePiece,referenceIndex,result,numberName,"red");
-//        } else {
-//        }
-
-        if ((referenceIndex + result) > 62){
-            movePiece.setState("homeWay");
-            homeWayP1.get(result-1).addPiece(movePiece);
-            refreshCompleteMatrixHomeWay(result,numberName,referenceIndex, movePiece,"red");
+        boolean flagHomeWay = false;
+        if (player.equals("P1")) {
+            flagHomeWay = movePieceHomeWay(homeWayP1,movePiece,referenceIndex,result,numberName,"red");
+        } else {
+            flagHomeWay = movePieceHomeWay(homeWayP2,movePiece,referenceIndex,result,numberName,"yellow");
         }
-        boolean flagHomeWay= homeWayContains(homeWayP1,numberName);
-        if (flagHomeWay) {
-            removeInMainBoxes(numberName);
-            quitExtraPieces(numberName);
-            referenceIndex = homeWayReferenceIndex(homeWayP1,numberName);
-            movePiece = homeWayP1.get(referenceIndex).pieceReference(numberName);
-            homeWayP1.get(referenceIndex).removePiece(movePiece);
-            homeWayP1.get(referenceIndex + result).addPiece(movePiece);
-            refreshCompleteMatrixHomeWay(result + referenceIndex,numberName,referenceIndex, movePiece,"red");
-        }
-//        System.out.println("REFERENCE INDEX IS: " + referenceIndex);
-//        if (movePiece.getPower().equals("Advantageous")) {
-//            result+=3; // TODO: validar turno
-//        }
+        result=validatePiecePowerful(movePiece,result);
         // move the piece
-        if ((referenceIndex + result) >= 68) referenceIndex = 0; // TODO: REPOSICION DE ELEMENTO IRIA DESDE EL INICIO
+        if ((referenceIndex + result) >= 68) referenceIndex = 0;
         if (!flagHomeWay) {
-            //Update the matrix
-            refreshCompleteMatrix(result,numberName,referenceIndex, movePiece);
-            referenceIndex += result;
-            // add the piece using the reference
-            mainBoxes.get(referenceIndex).addPiece(movePiece);
+            boolean flagsito = validateMeal(result,numberName, referenceIndex, movePiece);
+            if (!flagsito) {
+                result = validateJoker(referenceIndex,result);
+                //Update the matrix
+                refreshCompleteMatrix(result,numberName,referenceIndex, movePiece);
+                referenceIndex += result;
+                // add the piece using the reference
+                mainBoxes.get(referenceIndex).addPiece(movePiece);
+//                movePiece.setPosition(referenceIndex);
+            }
         }
     }
 
+    /**
+     * @param referenceIndex
+     * @param result
+     * @return number of boxes to move if it is a joker box
+     */
+    public int validateJoker(int referenceIndex, int result){
+        String joker = mainBoxes.get(referenceIndex+result).getWildcard();
+        int wildcard = 0;
+        if (joker.equals("Plus5") ) wildcard = 5;
+        else if (joker.equals("Menus5") ) wildcard = -5;
+        int totalMove = referenceIndex + result;
+        if (totalMove == 9 || totalMove == 26 || totalMove == 45){
+            result += wildcard;
+            return result;
+        }
+        return result;
+    }
+
+    /**
+     * @param movePiece
+     * @param result
+     * @return number of boxes to move if it is a powerful piece
+     */
+    public int validatePiecePowerful(Piece movePiece, int  result){
+        int totalResult = result;
+        if (movePiece != null) {
+            if (movePiece.getPower().equals("Advantageous")) {
+                result+=3;
+                return result;
+            }
+        }
+        return totalResult;
+    }
+
+    /**
+    * Validate if the next box contains a piece of the other player.
+    * @param result  - value of the dice
+    * @param numberName - Number of the piece to move
+    * @param referenceIndex - Index position where is located the piece
+    * @param movePiece - Piece reference
+    * @return flag - True if the next box contains a piece of the other player.
+     */
+    public boolean validateMeal(int result,int numberName, int referenceIndex, Piece movePiece){
+        int totalMove = referenceIndex+result;
+        boolean flag = false;
+        if (mainBoxes.get(totalMove).getState().equals("1")){
+            if (numberName <=4) {
+                if (mainBoxes.get(totalMove).getColor().toString().equals("yellow")) {
+                    baseP2.addPiece(mainBoxes.get(totalMove).getPieces().get(0));
+                }
+            } else {
+                if (mainBoxes.get(totalMove).getColor().toString().equals("red")) {
+                    baseP1.addPiece(mainBoxes.get(totalMove).getPieces().get(0));
+                }
+            }
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * Move piece in home way arrayList
+     * @param homeWayP - homeWayP1 or homeWayP2
+     * @param movePiece - Piece reference
+     * @param referenceIndex - Index position where is located the piece
+     * @param result -  value of the dice
+     * @param numberName - Number of the piece to move
+     * @param colorBase - color of the player
+     * @return flagHomeWay => true if piece is in home way
+     */
+    public boolean movePieceHomeWay(ArrayList<HomeWay> homeWayP,Piece movePiece,int referenceIndex,int result,int numberName,String colorBase){
+        int maxLimit = 62;
+        // Pieces are from player 2
+        boolean flagsito = (referenceIndex + result) > maxLimit;
+        if (numberName > 4) {
+            maxLimit = 31;
+            flagsito = Math.abs((referenceIndex + result)-maxLimit) <= 1;
+        }
+        if (flagsito){
+            movePiece.setState("homeWay");
+            homeWayP.get(result-1).addPiece(movePiece);
+            refreshCompleteMatrixHomeWay(result,numberName,referenceIndex, movePiece,colorBase);
+        }
+        boolean flagHomeWay= homeWayContains(homeWayP,numberName);
+        if (flagHomeWay) {
+            boolean flagson = true;
+            removeInMainBoxes(numberName);
+            quitExtraPieces(numberName);
+            referenceIndex = homeWayReferenceIndex(homeWayP,numberName);
+            movePiece = homeWayP.get(referenceIndex).pieceReference(numberName);
+            homeWayP.get(referenceIndex).removePiece(movePiece);
+            if (referenceIndex + result >= homeWayP.size()) flagson = false;
+            if (flagson) {
+                homeWayP.get(referenceIndex + result).addPiece(movePiece);
+                refreshCompleteMatrixHomeWay(result + referenceIndex,numberName,referenceIndex, movePiece,colorBase);
+            } else {
+                JOptionPane.showMessageDialog(null, "Piece " + "has won!!!");
+                homeWayP.get(referenceIndex).removePiece();
+                successPieces.setAmountPieces(successPieces.getAmountPieces()+1);
+            }
+        }
+        return flagHomeWay;
+    }
+
+    /**
+     * @param homeWay - homeWayP1 or homeWayP2
+     * @param numPiece - Number of the piece to move
+     * @return index of the piece in the homeway
+     */
     public int homeWayReferenceIndex(ArrayList<HomeWay> homeWay, int numPiece){
         ArrayList<Integer> piecesNum;
         for (int i = 0; i < homeWay.size(); i++) {
             piecesNum= homeWay.get(i).lookPieces();
             if (piecesNum.contains(numPiece)){
-                System.out.println("Si encuentra la ficha en homeway");
                 return i;
             }
         }
         return 0;
     }
 
+    /**
+     * @param homeWay - homeWayP1 or homeWayP2
+     * @param numPiece - Number of the piece to move
+     * @return true if home way contains a piece number
+     */
     public boolean homeWayContains(ArrayList<HomeWay> homeWay, int numPiece){
         ArrayList<Integer> piecesNum;
         for (Box p : homeWay) {
@@ -388,6 +567,10 @@ public class Board {
         return false;
     }
 
+    /**
+     * Remove the piece in mainBoxes listArray
+     * @param numPiece - Number of the piece to move
+     */
     public void removeInMainBoxes(int numPiece) {
         ArrayList<Integer> piecesNum;
         for (Box p : mainBoxes) {
@@ -398,19 +581,15 @@ public class Board {
         }
     }
 
+    /**
+     * Refresh the presentation matrix according the piece movement
+     * @param result   -  value of the dice
+     * @param numberName - Number of the piece to move
+     * @param referenceIndex - Index position where is located the piece
+     * @param movePiece - Piece reference
+     */
     public void refreshCompleteMatrix(int result,int numberName, int referenceIndex, Piece movePiece) {
-//        System.out.println("RESULT IS: " + result);
-//        System.out.println("REFERENCE INDEX IS: " + referenceIndex);
         int totalMove = referenceIndex + result;
-//        mainBoxes;
-//        System.out.println("---------------------------------------------------------------");
-//        System.out.println("REFERENCE INDEX IS: " + referenceIndex + " RESULT: " + result);
-//        System.out.println("ANTES CASILLA: " + getBoxReferencePosition()[referenceIndex][0][0] + "," + getBoxReferencePosition()[referenceIndex][0][1] );
-//        System.out.println("RESULTADO DEL DADO: " + result);
-//        System.out.println("DESPUES CASILLA: " + getBoxReferencePosition()[totalMove][0][0] + "," + getBoxReferencePosition()[totalMove][0][1] );
-//        System.out.println("---------------------------------------------------------------");
-//        boolean flag = completeMatrix[getBoxReferencePosition()[referenceIndex][0][0]][getBoxReferencePosition()[totalMove][0][1]].pieceReference(numberName) == movePiece;
-
         boolean flagPath1 = completeMatrix[getBoxReferencePosition()[totalMove][0][0]][getBoxReferencePosition()[totalMove][0][1]].getState().equals("");
         boolean flagPath2 = completeMatrix[getBoxReferencePosition()[totalMove][1][0]][getBoxReferencePosition()[totalMove][1][1]].getState().equals("");
         boolean validatePieceMovement = false;
@@ -428,8 +607,10 @@ public class Board {
 
     }
 
-    /*
-    * */
+
+    /**
+     * @return position of the 68 main boxes in the board
+     */
     public int[][][] getBoxReferencePosition(){
         int[][][] boxesPosition = {
 
@@ -457,6 +638,10 @@ public class Board {
         return boxesPosition;
     }
 
+    /**
+     * @param baseHomeWay base color of the player
+     * @return position of the pieces in the boxes
+     */
     public int[][][] getBoxReferencePositionHomeWay(String baseHomeWay){
         int[][][] boxesPositionHomeWay = {};
         if (baseHomeWay.equals("red")) {
@@ -475,19 +660,18 @@ public class Board {
         return boxesPositionHomeWay;
     }
 
-    /*
-     *
+    /**
+     * Refresh presentation matrix in home way
+     * @param result  -  value of the dice
+     * @param numberName - Number of the piece to move
+     * @param referenceIndex - Index position where is located the piece
+     * @param movePiece - Piece reference
+     * @param colorBase - color of the player
      */
     public void refreshCompleteMatrixHomeWay(int result,int numberName, int referenceIndex, Piece movePiece, String colorBase) {
         boolean flagPath1 = completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][0][0]][getBoxReferencePositionHomeWay(colorBase)[result][0][1]].getState().equals("");
         boolean flagPath2 = completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][1][0]][getBoxReferencePositionHomeWay(colorBase)[result][1][1]].getState().equals("");
         boolean validatePieceMovement = false;
-        System.out.println("********************************************************");
-        System.out.println("REFERENCE INDEX IS: " + referenceIndex + " RESULT: " + result);
-        System.out.println("CASILLA A PARAR (1): " + getBoxReferencePositionHomeWay(colorBase)[result][0][0] + "," + getBoxReferencePositionHomeWay(colorBase)[result][0][1] );
-        System.out.println("RESULTADO DEL DADO: " + result);
-        System.out.println("CASILLA A PARAR: " + getBoxReferencePositionHomeWay(colorBase)[result][1][0] + "," + getBoxReferencePositionHomeWay(colorBase)[result][1][1] );
-        System.out.println("********************************************************");
         if (flagPath1) {
             completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][0][0]][getBoxReferencePositionHomeWay(colorBase)[result][0][1]].addPiece(movePiece);
             validatePieceMovement = true;
@@ -495,14 +679,19 @@ public class Board {
             completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][1][0]][getBoxReferencePositionHomeWay(colorBase)[result][1][1]].addPiece(movePiece);
             validatePieceMovement = true;
         }
-//        if (validatePieceMovement) {
-//            completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][0][0]][getBoxReferencePositionHomeWay(colorBase)[result][0][1]].removePiece(movePiece);
-//            completeMatrix[getBoxReferencePositionHomeWay(colorBase)[result][1][0]][getBoxReferencePositionHomeWay(colorBase)[result][1][1]].removePiece(movePiece);
-//        }
     }
 
 
+    public void setPiecePower(String powerPiece){
+        ArrayList<Piece> b1 = baseP1.getPieces();
+        for(Piece p: b1){
+            p.setPower(powerPiece);
+        }
 
-public void refresh() {}
+        ArrayList<Piece> b2 = baseP2.getPieces();
+        for(Piece p: b2){
+            p.setPower(powerPiece);
+        }
+    }
 
 }

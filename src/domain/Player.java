@@ -6,7 +6,7 @@ public class Player {
     private Dice dice;
     private String color;
     private Piece[] pieces;
-    private String name; // TODO: modificar y validar name
+    private String name;
     // value dices
     private int[] valueDices;
 
@@ -21,6 +21,9 @@ public class Player {
         return name;
     }
 
+    /**
+     * @return list of values in order to move
+     */
     public int[] getValueDice() {
         int val1 = dice.rollDice();
         int val2 = dice.rollDice();
