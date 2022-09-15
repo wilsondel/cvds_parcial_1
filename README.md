@@ -13,7 +13,7 @@ No se tiene un buen uso del .gitignore, para no llevar trackeo de archivos o dir
 
 ### SOLID
 * Se viola el principio de *Single Responsibility* ya que la clase Board está sobrecargada de distintas responsabilidades.  
-![img_1.png](img_1.png)
+![img_1.png](readme_images/img_1.png)
 * Se evidencia el uso del principio de *Open/Close* aplicado en el polimorfismo sobre los distintos tipos de casillas.
  En el caso de la clase, Joker que hereda de Box.
 
@@ -50,7 +50,7 @@ baja cohesion.
 
 * Para el principio de *Inversion de dependencias*,
 Hay una gran cantidad de dependencia entre las clases de la aplicación. Se evidencia que las clases son las que directamente se encargan de la creación de los objetos.
-![img.png](img.png)
+![img.png](readme_images/img.png)
 
 Para su solución se puede delegar la creación de objetos a un framework como guice.
 
@@ -59,15 +59,15 @@ Para su solución se puede delegar la creación de objetos a un framework como g
 ### M.V.C
 
 **Model**
-![img_1.png](img_1.png)
+![img_1.png](readme_images/img_1.png)
 Contiene la lógica para trabajar con los datos y manipular su estado.
 
 **View** 
-![img_3.png](img_3.png)
+![img_3.png](readme_images/img_3.png)
 Interactúa con el controlador, modificando, recibiendo y actualizando la visualización de los datos. También cumple con tener las reglas de gestión de los eventos.
 
 **Controller**
-![img_2.png](img_2.png)
+![img_2.png](readme_images/img_2.png)
 Se tiene una mala distribución de responsabilidades, ya que la clase que debería ser la controladora, en este caso, Poobchis no cumple su función y se está dejando a la clase Board la responsabilidad, la cual, también maneja los datos. 
 
 
@@ -135,6 +135,6 @@ Hay oportunidades de mejora en el nombramiento de los tests. Por ejemplo:p
 
 ## Patrones
 Se hace uso del patrón singleton en la clase MenuOptions
-![img_5.png](img_5.png)
+![img_5.png](readme_images/img_5.png)
 
 
