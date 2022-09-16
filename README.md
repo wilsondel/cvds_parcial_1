@@ -5,11 +5,17 @@
 * Maria Juanita Oramas Bermudez
 * Wilson Alirio Delgado Hernandez
 
+Se hizo uso de un proyecto en un repositorio git local. 
+  1. Se creó un repositorio remoto en GitHub
+  2. Se llevaron los cambios del repositorio local al remoto 
 
 ## Malas Prácticas
 
 ### Git y GitHub
-No se tiene un buen uso del .gitignore, para no llevar trackeo de archivos o directorios innecesarios como los del IDE.  
+
+Se pudo identificar que en el proyecto:
+* No se tiene un buen uso del .gitignore, para no llevar trackeo de archivos o directorios innecesarios como los del IDE.
+* Todos los commit directo en el main
 
 ### SOLID
 * Se viola el principio de *Single Responsibility* ya que la clase Board está sobrecargada de distintas responsabilidades.  
@@ -43,16 +49,43 @@ public class HomeWay extends  Box {
 
 
 
-* No se hace uso del *principio de segregación de interfaces* porque no hay uso de interfaces, ni clases abstractas. 
+* No se hace uso del *principio de segregación de interfaces* porque no hay uso de interfaces. 
 Sin embargo, su uso se podría implementar en el diseño de las fichas y de las casillas.  
 baja cohesion.
  
 
 * Para el principio de *Inversion de dependencias*,
 Hay una gran cantidad de dependencia entre las clases de la aplicación. Se evidencia que las clases son las que directamente se encargan de la creación de los objetos.
-![img.png](readme_images/img.png)
+![img_1.png](readme_images/img_7.png)
 
 Para su solución se puede delegar la creación de objetos a un framework como guice.
+Creamos la interfaz y a esta se le enlaza la implementación de la clase concreta.
+
+```
+public class PoobchisFactoryServices extends com.google.inject.AbstractModule {
+    @Override
+    protected void configure() {
+         bind(BoardSetup.class).to(Board.class);
+         bind(Player.class).to(NormalPlayer.class);
+    }
+}
+```
+Posteriormente se puede hacer de la inyección:
+```
+private Board board;
+private Player p1, p2;
+
+@Inject
+public Poobchis(Board board, Player p1, Player p2 ){
+    this.board = board;
+    this.p1 = p1;
+    this.p2 = p2;
+    currentPlayer = true;
+    nextPlayer = true;
+}
+```
+
+
 
 
 
@@ -70,15 +103,28 @@ Interactúa con el controlador, modificando, recibiendo y actualizando la visual
 ![img_2.png](readme_images/img_2.png)
 Se tiene una mala distribución de responsabilidades, ya que la clase que debería ser la controladora, en este caso, Poobchis no cumple su función y se está dejando a la clase Board la responsabilidad, la cual, también maneja los datos. 
 
-
 #
 
 ## Unit Testing
-Los tests no cuentan con clases de equivalencia lo que genera baja claridad sobre los conjuntos de datos de entrada.
+* Los tests no cuentan con clases de equivalencia lo que genera baja claridad sobre los conjuntos de datos de entrada.
+* No hay completa cobertura del código
+
 
 ### F.I.R.S.T
-Se viola el principio 
-codigo legacy 
+
+Fast(rápido)
+* No permite la ejecución de todos los tests dado que dado que se ve interrumpido por una ventana emergente. 
+![img_2.png](readme_images/img_8.png)
+
+Repeatable(repetible)
+* La ejecución de un mismo test, en este caso `shouldValidateHomeWayPieceP2` y `shouldValidateHomeWayPieceP1`, pasa pero en otros no. 
+
+Timely(Oportuno)
+* Se dejaron para el final los test
+
+
+
+> **código legacy** 
 
 ### AAA
 Vemos que algunas pruebas si cumplen con este patron, pero no todas.
@@ -102,7 +148,7 @@ Vemos que algunas pruebas si cumplen con este patron, pero no todas.
 *Arrange* Inicializar, *Act* método a probar, *Assert* comprobación. 
 
 ### Patrones de nombramiento
-Hay oportunidades de mejora en el nombramiento de los tests. Por ejemplo:p
+Hay oportunidades de mejora en el nombramiento de los tests. Por ejemplo:
 
 ```
     @Test
@@ -121,11 +167,14 @@ Hay oportunidades de mejora en el nombramiento de los tests. Por ejemplo:p
 ```
     @Test
     public void given4PiecesToABox_whenRemovePieces_thenSizeIs0() {
+        // Arrange
         Box box = new Box();
         Piece[] pieces = {new Piece(Color.cyan),new Piece(Color.cyan),new Piece(Color.cyan),new Piece(Color.cyan)};
+        // Act
         box.addPiece(pieces);
         box.removePiece();
         int sizePieces = box.getPieces().size();
+        // Assert
         assertEquals(0,sizePieces);
     }
 
@@ -134,7 +183,7 @@ Hay oportunidades de mejora en el nombramiento de los tests. Por ejemplo:p
 
 
 ## Patrones
-Se hace uso del patrón singleton en la clase MenuOptions
+Se hace uso del patrón creacional *singleton* en la clase MenuOptions
 ![img_5.png](readme_images/img_5.png)
 
 
