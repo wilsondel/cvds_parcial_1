@@ -51,7 +51,7 @@ public class HomeWay extends  Box {
 
 * No se hace uso del *principio de segregación de interfaces* porque no hay uso de interfaces. 
 Sin embargo, su uso se podría implementar en el diseño de las fichas y de las casillas.  
-baja cohesion.
+![img.png](readme_images/img_9.png)
  
 
 * Para el principio de *Inversion de dependencias*,
@@ -148,6 +148,7 @@ Vemos que algunas pruebas si cumplen con este patron, pero no todas.
 *Arrange* Inicializar, *Act* método a probar, *Assert* comprobación. 
 
 ### Patrones de nombramiento
+
 Hay oportunidades de mejora en el nombramiento de los tests. Por ejemplo:
 
 ```
