@@ -46,6 +46,7 @@ public class HomeWay extends  Box {
 
 * No se hace uso del *principio de segregación de interfaces* porque no hay uso de interfaces. 
 Sin embargo, su uso se podría implementar en el diseño de las fichas y de las casillas.  
+<<<<<<< HEAD
 
 * Antes
 
@@ -53,6 +54,12 @@ Sin embargo, su uso se podría implementar en el diseño de las fichas y de las 
 
 * Después
 
+=======
+Antes
+![img_1.png](readme_images/img_11.png)
+
+Después
+>>>>>>> 789492374df554f8bcc8910e3578dfa8eaf87630
 ![img.png](readme_images/img_10.png)
 
 * Para el principio de *Inversion de dependencias*,
