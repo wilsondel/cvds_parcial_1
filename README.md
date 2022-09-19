@@ -20,17 +20,12 @@ Se pudo identificar que en el proyecto:
 ### SOLID
 * Se viola el principio de *Single Responsibility* ya que la clase Board está sobrecargada de distintas responsabilidades.  
 ![img_1.png](readme_images/img_1.png)
-* Se evidencia el uso del principio de *Open/Close* aplicado en el polimorfismo sobre los distintos tipos de casillas.
- En el caso de la clase, Joker que hereda de Box.
+* Se evidencia el uso del principio de *Open/Close* aplicado en extender la funcionalidad.
+ En el caso de la clase, Success que hereda de Box y se extienden los métodos.
 
 ```
-    @Override
-    public String getWildcard(){
-        String[] myWildCard = {movePlus5,moveMenus5};
-        Random r = new Random();
-        int randomitem = r.nextInt(myWildCard.length);
-        String randomElement = myWildCard[randomitem];
-        return randomElement;
+    public void setAmountPieces(int amountPieces) {
+        this.amountPieces = amountPieces;
     }
 ```
 
@@ -51,8 +46,14 @@ public class HomeWay extends  Box {
 
 * No se hace uso del *principio de segregación de interfaces* porque no hay uso de interfaces. 
 Sin embargo, su uso se podría implementar en el diseño de las fichas y de las casillas.  
-![img.png](readme_images/img_9.png)
- 
+
+* Antes
+
+![img_1.png](readme_images/img_11.png)
+
+* Después
+
+![img.png](readme_images/img_10.png)
 
 * Para el principio de *Inversion de dependencias*,
 Hay una gran cantidad de dependencia entre las clases de la aplicación. Se evidencia que las clases son las que directamente se encargan de la creación de los objetos.
